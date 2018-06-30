@@ -5,6 +5,7 @@ A selection of weird & wonderful additional relation types for laravel's eloquen
 Many of these are experimental and may behave in unexpected & none standard ways.
 
 On the bright side it is tested.
+[![Build Status](https://travis-ci.org/thybag/bonus-laravel-relations.svg?branch=master)](https://travis-ci.org/thybag/bonus-laravel-relations)
  
 All licensed under the MIT license.
 
