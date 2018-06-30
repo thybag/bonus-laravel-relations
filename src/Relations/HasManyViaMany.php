@@ -122,15 +122,15 @@ class HasManyViaMany extends Relation
      */
     protected function initJoins()
     {
-        foreach($this->relationArray as $join) {
+        foreach ($this->relationArray as $join) {
             // Array? or just a raw class
             if (is_array($join)) {
-                return $this->handleJoinVia($join[0], $join[1], $join[2]);
+                $this->handleJoinVia($join[0], $join[1], $join[2]);
             } elseif (class_exists($join)) {
-                return $this->handleJoinVia($join);
+                $this->handleJoinVia($join);
+            } else {
+                throw new InvalidArgumentException('Unknown join type passed to manyViaMany via array.');
             }
-
-            throw new InvalidArgumentException('Unknown join type passed to manyViaMany via array.');
         }
     }
 
