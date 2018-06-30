@@ -2,7 +2,7 @@
 namespace thybag\BonusLaravelRelations\Test\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use thybag\BonusLaravelRelations\traits\BonusRelationsTrait;
+use thybag\BonusLaravelRelations\Traits\BonusRelationsTrait;
 
 class Shop extends Model {
     use BonusRelationsTrait;
