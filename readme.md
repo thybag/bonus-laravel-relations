@@ -11,7 +11,7 @@ All licensed under the MIT license.
 
 ## Usage.
 
-1. Install via composer using `composer install thybag/bonus-laravel-relations`
+1. Install via composer using `composer require thybag/bonus-laravel-relations`
 2. Include the `use thybag\BonusLaravelRelations\Traits\BonusRelationsTrait;` in to your model (or base model if you want them everywhere.)
 3. Use the relations as you would any other.
 
