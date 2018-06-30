@@ -4,7 +4,8 @@ namespace thybag\BonusLaravelRelations\Test\Models;
 use Illuminate\Database\Eloquent\Model;
 use thybag\BonusLaravelRelations\Traits\BonusRelationsTrait;
 
-class Region extends Model {
+class Region extends Model
+{
     use BonusRelationsTrait;
 
     public $timestamps = false;
@@ -29,50 +30,57 @@ class Region extends Model {
         return $this->hasManyViaMany(Product::class)->via(Shop::class)->via(Franchise::class);
     }
 
-    public function products_specificJoinKeys()
+    public function productsSpecificJoinKeys()
     {
         return $this->hasManyViaMany(Product::class, 'id', 'franchises.region_id')
             ->via(Shop::class, 'shops.id', 'products.shop_id')
             ->via(Franchise::class, 'shops.franchise_id', 'franchises.id');
     }
 
-    public function products_specificJoins()
+    public function productsSpecificJoins()
     {
         return $this->hasManyViaMany(Product::class, 'id', 'franchises.region_id')
-            ->via('shops','shops.id','products.shop_id')
+            ->via('shops', 'shops.id', 'products.shop_id')
             ->via('franchises', 'shops.franchise_id', 'franchises.id');
     }
 
-    public function products_usingArray_joins()
+    public function productsUsingArrayJoins()
     {
-        return $this->hasManyViaMany(Product::class, 'id', 'franchises.region_id',
+        return $this->hasManyViaMany(
+            Product::class,
+            'id',
+            'franchises.region_id',
             [
                 ['shops','shops.id','products.shop_id'],
                 ['franchises', 'shops.franchise_id', 'franchises.id']
-            ]);
+            ]
+        );
     }
 
-    public function products_usingArray_models()
+    public function productsUsingArrayModels()
     {
-        return $this->hasManyViaMany(Product::class, null, null,
-        [
+        return $this->hasManyViaMany(
+            Product::class,
+            null,
+            null,
+            [
             Shop::class,
             Franchise::class
-        ]);
+            ]
+        );
     }
 
-    public function products_mixedOkay()
+    public function productsMixedOkay()
     {
         return $this->hasManyViaMany(Product::class, 'id', 'franchises.region_id')
             ->via(Shop::class)
             ->via('franchises', 'shops.franchise_id', 'franchises.id');
     }
 
-    public function products_mixedBad()
+    public function productsMixedBad()
     {
         return $this->hasManyViaMany(Product::class, 'id', 'franchises.region_id')
-            ->via('shops','shops.id','products.shop_id')
+            ->via('shops', 'shops.id', 'products.shop_id')
             ->via(Franchise::class);
     }
-
 }

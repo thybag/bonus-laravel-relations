@@ -4,7 +4,8 @@ namespace thybag\BonusLaravelRelations\Test\Models;
 use Illuminate\Database\Eloquent\Model;
 use thybag\BonusLaravelRelations\Traits\BonusRelationsTrait;
 
-class Franchise extends Model {
+class Franchise extends Model
+{
     use BonusRelationsTrait;
 
     public $timestamps = false;

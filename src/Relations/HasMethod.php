@@ -34,18 +34,18 @@ class HasMethod extends Relation
 
     /**
      * Get basic model instance to return as result.
-     * 
+     *
      * @return Model
      */
     protected function getInertModelInstance()
     {
         // @todo allow custom model via config
-        return new InertModel(); 
+        return new InertModel();
     }
 
     /**
      * Set the base constraints on the relation query.
-     * 
+     *
      * @param  array $models
      * @param  Model $relation
      * @return array Models
@@ -60,7 +60,7 @@ class HasMethod extends Relation
 
     /**
      * Handle running hasMethod calls on model collection (for eager loading)
-     * 
+     *
      * @param  array $models - Models to eager load on to
      * @param  Collection $results - empty as no querying needed when just calling a method
      * @param  string $relation - Name of relation
@@ -79,7 +79,7 @@ class HasMethod extends Relation
 
     /**
      * Handle hasMethod call for single model.
-     * 
+     *
      * @return Model|Collection
      */
     public function getResults()
@@ -89,12 +89,12 @@ class HasMethod extends Relation
 
     /**
      * Figure out how to actually run the relations method.
-     * 
+     *
      * @param  Model model
      * @return Model|Collection $result
      */
     public function resolveMethod(Model $model)
-    {   
+    {
         // Is it a callback or public method
         if (is_callable($this->method)) {
             $results = call_user_func($this->method, $model);
@@ -104,27 +104,23 @@ class HasMethod extends Relation
 
         if (empty($results)) {
             return null;
-        }
-        // Are we forcing to collection?
-        elseif ($this->returnCollection) {
-            // Map it if its an array
+        } elseif ($this->returnCollection) {
+            // Are we forcing to collection?
             if (is_array($results)) {
+                // Map it in to one if its an array
                 $results = collect($results);
             }
             return $results;
-        } 
-        // Is it already a real eloquent model or collection? return as is if so.
-        elseif (is_a($results, 'Illuminate\Database\Eloquent\Collection') || is_a($results, 'Illuminate\Database\Eloquent\Model')) {
+        } elseif (is_a($results, 'Illuminate\Database\Eloquent\Collection') || is_a($results, 'Illuminate\Database\Eloquent\Model')) {
+            // Is it already a real eloquent model or collection? return as is if so.
             return $results;
-        }
-        // Standard collection - make it a model.
-        elseif (is_a($results, 'Illuminate\Support\Collection')) {
+        } elseif (is_a($results, 'Illuminate\Support\Collection')) {
+            // Standard collection - make it a model.
             $result = $this->getInertModelInstance();
             $result->forceFill($results->toArray());
             return $result;
-        } 
-        // Object or array - model again
-        elseif(is_array($results) || is_object($results)) {
+        } elseif (is_array($results) || is_object($results)) {
+            // Object or array - model again
             $result = $this->getInertModelInstance();
             $result->forceFill((array) $results);
             return $result;

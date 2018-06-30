@@ -8,7 +8,7 @@ trait HasManyViaManyRelationTrait
 {
     /**
      * Define a relation via an unlimited amount of middle tables.
-     * 
+     *
      * @param  string|class - Results to return
      * @param  string - foreignKey
      * @param  string - finalKey for joins

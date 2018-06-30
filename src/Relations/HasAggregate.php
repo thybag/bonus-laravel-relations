@@ -20,14 +20,14 @@ class HasAggregate extends Relation
 
     /**
      * Set up relation
-     * 
+     *
      * @param Builder
      * @param Model
      * @param string
      * @param string|null
      */
     public function __construct(Builder $query, Model $parent, string $relation_key, string $sql = null)
-    {       
+    {
         // Set relation key
         $this->relation_key = $relation_key;
         $this->aggregate_sql = $sql;
@@ -51,13 +51,13 @@ class HasAggregate extends Relation
 
     /**
      * Add constraints for a lazy load
-     * 
+     *
      * @param array $models
      */
     public function addEagerConstraints(array $models)
     {
         $this->query->
-            selectRaw($this->relation_key.' as id')
+            selectRaw($this->relation_key . ' as id')
             ->whereIn($this->relation_key, $this->getKeys($models, 'id'))
             ->groupBy($this->relation_key);
 
@@ -73,7 +73,7 @@ class HasAggregate extends Relation
     {
         if (static::$constraints) {
             $this->query->where($this->relation_key, '=', $this->parent->getKey())
-                ->selectRaw($this->relation_key.' as id')
+                ->selectRaw($this->relation_key . ' as id')
                 ->groupBy($this->relation_key);
 
             if (!empty($this->aggregate_sql)) {
@@ -84,7 +84,7 @@ class HasAggregate extends Relation
 
     /**
      * Match lazy loaded results to their parent models
-     * 
+     *
      * @param  array Models
      * @param  Collection Loaded aggregate models.
      * @param  string $relation
@@ -105,7 +105,7 @@ class HasAggregate extends Relation
 
     /**
      * Get results for aggregate relation called on single model
-     * 
+     *
      * @return Model
      */
     public function getResults()

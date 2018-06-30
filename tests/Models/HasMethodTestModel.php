@@ -4,7 +4,8 @@ namespace thybag\BonusLaravelRelations\Test\Models;
 use Illuminate\Database\Eloquent\Model;
 use thybag\BonusLaravelRelations\Traits\BonusRelationsTrait;
 
-class HasMethodTestModel extends Model {
+class HasMethodTestModel extends Model
+{
     use BonusRelationsTrait;
 
     public $fillable = [
@@ -23,7 +24,7 @@ class HasMethodTestModel extends Model {
 
     public function asCallback()
     {
-        return $this->hasMethod(function(){
+        return $this->hasMethod(function () {
             return [
                 'product' => ucfirst($this->product),
                 'totalValue' => $this->amount * $this->value
@@ -41,9 +42,9 @@ class HasMethodTestModel extends Model {
         return $this->hasMethod('getInfo', true);
     }
 
-    public function asCallback_returnCollection()
+    public function asCallbackReturnCollection()
     {
-        return $this->hasMethod(function(){
+        return $this->hasMethod(function () {
             return collect([
                 'test' => 1,
                 'test2' => 2,
@@ -55,35 +56,34 @@ class HasMethodTestModel extends Model {
 
     public function callbackNull()
     {
-        return $this->hasMethod(function(){
+        return $this->hasMethod(function () {
             return null;
         });
     }
 
     public function callbackEmptyString()
     {
-        return $this->hasMethod(function(){
+        return $this->hasMethod(function () {
             return '';
         });
     }
 
     public function callbackEmpty()
     {
-        return $this->hasMethod(function(){
-
+        return $this->hasMethod(function () {
         });
     }
 
     public function callbackAsArray()
     {
-        return $this->hasMethod(function(){
+        return $this->hasMethod(function () {
             return ['a' => 'one','b' => 'two'];
         });
     }
 
-        public function callbackAsObject()
+    public function callbackAsObject()
     {
-        return $this->hasMethod(function(){
+        return $this->hasMethod(function () {
             $test = new \stdClass();
             $test->a = 'one';
             $test->b = 'two';

@@ -58,7 +58,9 @@ class BelongsToMorph extends BelongsTo
 
         // Limit to valid morph types
         return $query->where(
-            $this->getParent()->getTable().".".$this->morphType, '=', $this->morphName
+            $this->getParent()->getTable() . "." . $this->morphType,
+            '=',
+            $this->morphName
         );
     }
 
@@ -91,7 +93,7 @@ class BelongsToMorph extends BelongsTo
         // to query for via the eager loading query. We will add them to an array then
         // execute a "where in" statement to gather up all of those related records.
         foreach ($models as $model) {
-            //  Filter collection down so we don't match keys that happen to exist in both this model and another poly model
+            // Filter collection down so we don't match keys that happen to exist in both this model and another poly model
             if (! is_null($value = $model->{$this->foreignKey}) && $model->{$this->morphType} == $this->morphName) {
                 $keys[] = $value;
             }
@@ -126,13 +128,13 @@ class BelongsToMorph extends BelongsTo
         // Create dict of morph type:id
         $dictionary = [];
         foreach ($results as $result) {
-            $dictionary[$result->getMorphClass().':'.$result->getAttribute($owner)] = $result;
+            $dictionary[$result->getMorphClass() . ':' . $result->getAttribute($owner)] = $result;
         }
 
         // For each model found, get its requested morph type + id to build key in order to check
         // against the above rows
         foreach ($models as $model) {
-            $key = $model->{$this->morphType}.':'.$model->{$foreign};
+            $key = $model->{$this->morphType} . ':' . $model->{$foreign};
             if (isset($dictionary[$key])) {
                 $model->setRelation($relation, $dictionary[$key]);
             }

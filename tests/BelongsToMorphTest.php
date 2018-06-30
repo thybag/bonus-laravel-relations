@@ -6,6 +6,7 @@ use Illuminate\Support\Facade\Schema;
 use thybag\BonusLaravelRelations\Test\Models\Shop;
 use thybag\BonusLaravelRelations\Test\Models\Product;
 use thybag\BonusLaravelRelations\Test\Models\Note;
+
 class TestBelongsToMoprh extends TestCase
 {
     public function setUp()
@@ -14,7 +15,7 @@ class TestBelongsToMoprh extends TestCase
         $this->loadMigrationsFrom(__DIR__ . '/database');
     }
 
-    public function testBelongsToMorph_exists()
+    public function testBelongsToMorphExists()
     {
         $shop = Shop::create(['name' => 'CheeseExpress']);
         $shop->notes()->save(Note::make(['note' => 'Hmmm']));
@@ -27,12 +28,12 @@ class TestBelongsToMoprh extends TestCase
         $product->notes()->save(Note::make(['note' => 'Less chessy']));
         $product->notes()->save(Note::make(['note' => 'Actually - its okay']));
 
-        $this->assertEquals(3, Note::whereHas('product')->get()->count());         
-        $this->assertEquals(2, Note::whereHas('shop')->get()->count());      
-        $this->assertEquals(5, Note::whereHas('noteable')->get()->count());  
+        $this->assertEquals(3, Note::whereHas('product')->get()->count());
+        $this->assertEquals(2, Note::whereHas('shop')->get()->count());
+        $this->assertEquals(5, Note::whereHas('noteable')->get()->count());
     }
 
-    public function testBelongsToMorph_getSingleResults()
+    public function testBelongsToMorphGetSingleResults()
     {
         $shop = Shop::create(['name' => 'CheeseExpress']);
         $note = Note::make(['note' => 'Hmmm']);
@@ -44,13 +45,13 @@ class TestBelongsToMoprh extends TestCase
 
 
         $this->assertNull($note->product);
-        $this->assertEquals('CheeseExpress', $note->shop->name);    
+        $this->assertEquals('CheeseExpress', $note->shop->name);
 
         $this->assertNull($note2->shop);
-        $this->assertEquals('Chedder', $note2->product->name);   
+        $this->assertEquals('Chedder', $note2->product->name);
     }
 
-    public function testBelongsToMorph_EagerLoad()
+    public function testBelongsToMorphEagerLoad()
     {
         $shop = Shop::create(['name' => 'CheeseExpress']);
         $note = Note::make(['note' => 'Hmmm']);
@@ -66,10 +67,7 @@ class TestBelongsToMoprh extends TestCase
         $this->assertEquals('Chedder', $notes->get(1)->product->name);
     }
 
-    /**
-     * @group oo
-     */
-    public function testBelongsToMorph_AltColumns()
+    public function testBelongsToMorphAltColumns()
     {
         $shop = Shop::create(['name' => 'CheeseExpress']);
         $note = Note::make(['note' => 'Hmmm']);
@@ -80,6 +78,4 @@ class TestBelongsToMoprh extends TestCase
         $this->assertEquals('CheeseExpress', $note->shopOverrideCols->name);
         $this->assertNull($note->shop);
     }
-
-
 }

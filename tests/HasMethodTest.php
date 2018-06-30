@@ -6,7 +6,7 @@ use thybag\BonusLaravelRelations\Test\Models\HasMethodTestModel;
 
 class TestHasMethod extends TestCase
 {
-    public function testHasMethod_withPublicMethod()
+    public function testHasMethodWithPublicMethod()
     {
         $test = HasMethodTestModel::make([
             'amount' => 5,
@@ -18,7 +18,7 @@ class TestHasMethod extends TestCase
         $this->assertEquals(10, $test->asMethod->totalValue);
     }
 
-    public function testHasMethod_withCallback()
+    public function testHasMethodWithCallback()
     {
         $test = HasMethodTestModel::make([
             'amount' => 5,
@@ -30,7 +30,7 @@ class TestHasMethod extends TestCase
         $this->assertEquals(15, $test->asCallback->totalValue);
     }
 
-    public function testHasMethod_withPublicMethod_forceCollection()
+    public function testHasMethodWithPublicMethodForceCollection()
     {
         $test = HasMethodTestModel::make([
             'amount' => 5,
@@ -42,15 +42,15 @@ class TestHasMethod extends TestCase
         $this->assertEquals(2, $test->asMethodForceCollection->count());
     }
 
-    public function testHasMethod_withCallback_returnedCollection()
+    public function testHasMethodWithCallbackReturnedCollection()
     {
         $test = HasMethodTestModel::make();
 
-        $this->assertEquals(1, $test->asCallback_returnCollection->first());
-        $this->assertEquals(3, $test->asCallback_returnCollection->count());
+        $this->assertEquals(1, $test->asCallbackReturnCollection->first());
+        $this->assertEquals(3, $test->asCallbackReturnCollection->count());
     }
 
-    public function testHasMethod_withCallback_badResults()
+    public function testHasMethodWithCallbackBadResults()
     {
         $test = HasMethodTestModel::make();
 
@@ -59,13 +59,13 @@ class TestHasMethod extends TestCase
         $this->assertNull($test->callbackEmpty);
     }
 
-    public function testHasMethod_withCallback_array()
+    public function testHasMethodWithCallbackArray()
     {
         $test = HasMethodTestModel::make();
         $this->assertEquals('one', $test->callbackAsArray->a);
     }
 
-    public function testHasMethod_withCallback_object()
+    public function testHasMethodWithCallbackObject()
     {
         $test = HasMethodTestModel::make();
         $this->assertEquals('one', $test->callbackAsObject->a);

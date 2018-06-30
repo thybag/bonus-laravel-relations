@@ -35,7 +35,8 @@ class HasManyViaMany extends Relation
      * @param  string $rightColumn for join
      * @return void
      */
-    protected function handleJoinVia(string $table, string $leftColumn = null, string $rightColumn = null) {
+    protected function handleJoinVia(string $table, string $leftColumn = null, string $rightColumn = null)
+    {
 
         // If previousModel === false, we are starting a new query
         if ($this->previousModel === false) {
@@ -50,12 +51,12 @@ class HasManyViaMany extends Relation
 
             // No left col, grab the prev model & current foreignKey
             if (empty($leftColumn)) {
-               $leftColumn = $this->previousModel->getTable().'.'.$instance->getForeignKey();
+                $leftColumn = $this->previousModel->getTable() . '.' . $instance->getForeignKey();
             }
 
             // No right col? Grab the current table & the prev models key
             if (empty($rightColumn)) {
-               $rightColumn = $table.'.'.$this->previousModel->getKeyName();
+                $rightColumn = $table . '.' . $this->previousModel->getKeyName();
             }
 
             // Update previous model pointer
@@ -101,9 +102,9 @@ class HasManyViaMany extends Relation
     public function get($columns = ['*'])
     {
         // Finalize
-        $this->query->selectRaw($this->related->getTable().'.*, '.$this->finalKey.' as parent_key');
+        $this->query->selectRaw($this->related->getTable() . '.*, ' . $this->finalKey . ' as parent_key');
 
-        //dd($this->query->toSql());
+        // dd($this->query->toSql());
         return $this->query->get($columns);
     }
 
@@ -179,13 +180,13 @@ class HasManyViaMany extends Relation
     }
 
         /**
-     * Match the eagerly loaded results to their parents.
-     *
-     * @param  array   $models
-     * @param  \Illuminate\Database\Eloquent\Collection  $results
-     * @param  string  $relation
-     * @return array
-     */
+         * Match the eagerly loaded results to their parents.
+         *
+         * @param  array   $models
+         * @param  \Illuminate\Database\Eloquent\Collection  $results
+         * @param  string  $relation
+         * @return array
+         */
     public function match(array $models, Collection $results, $relation)
     {
         $dictionary = $this->buildDictionary($results);

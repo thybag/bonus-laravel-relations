@@ -54,6 +54,5 @@ class MakeTestTables extends Migration
      */
     public function down()
     {
-
     }
 }

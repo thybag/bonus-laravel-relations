@@ -8,7 +8,7 @@ trait BelongsToMorphRelationTrait
 {
     /**
      * Returns polymorphic relations of a specific type
-     * 
+     *
      * @param  string|class
      * @param  string - name of relation
      * @param  string - type column
@@ -30,5 +30,3 @@ trait BelongsToMorphRelationTrait
         return new BelongsToMorph($instance->newQuery(), $this, $instance->getMorphClass(), $type, $id, $localKey, $relation);
     }
 }
-
-

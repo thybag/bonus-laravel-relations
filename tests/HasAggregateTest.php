@@ -14,7 +14,7 @@ class TestHasAggregate extends TestCase
         $this->loadMigrationsFrom(__DIR__ . '/database');
     }
 
-    public function testHasAggregate_threeParam()
+    public function testHasAggregateThreeParam()
     {
         $shop = Shop::create(['name' => 'CheeseExpress']);
         $shop->products()->save(Product::make(['name' => 'Cheese', 'amount' => 5, 'value' => 5]));
@@ -26,7 +26,7 @@ class TestHasAggregate extends TestCase
         $this->assertEquals(3, $shop->productTotals->average_product_value);
     }
 
-    public function testHasAggregate_productTotalsViaRaw()
+    public function testHasAggregateProductTotalsViaRaw()
     {
         $shop = Shop::create(['name' => 'CheeseExpress']);
         $shop->products()->save(Product::make(['name' => 'Cheese', 'amount' => 5, 'value' => 5]));
@@ -39,7 +39,7 @@ class TestHasAggregate extends TestCase
     }
 
 
-    public function testHasAggregate_withLazyLoad()
+    public function testHasAggregateWithLazyLoad()
     {
         $shop = Shop::create(['name' => 'CheeseExpress']);
         $shop->products()->save(Product::make(['name' => 'Cheese', 'amount' => 5, 'value' => 5]));
@@ -63,7 +63,7 @@ class TestHasAggregate extends TestCase
     }
 
 
-    public function testHasAggregate_exists()
+    public function testHasAggregateExists()
     {
         $shop = Shop::create(['name' => 'CheeseExpress']);
         $shop->products()->save(Product::make(['name' => 'Cheese', 'amount' => 5, 'value' => 5]));
@@ -80,5 +80,4 @@ class TestHasAggregate extends TestCase
 
         $this->assertEquals(2, $results->count());
     }
-
 }

@@ -15,7 +15,7 @@ class TestHasManyViaMany extends TestCase
         $this->loadMigrationsFrom(__DIR__ . '/database');
     }
 
-    public function testHasManyViaMany_basic()
+    public function testHasManyViaManyBasic()
     {
         [$uk, $usa] = $this->setUpData();
 
@@ -28,67 +28,68 @@ class TestHasManyViaMany extends TestCase
         $this->assertEquals(2, $usa->products->count());
     }
 
-    public function testHasManyViaMany_joins()
+    public function testHasManyViaManyJoins()
     {
         [$uk, $usa] = $this->setUpData();
 
-        $this->assertEquals(7, $uk->products_specificJoins->count());
-        $this->assertEquals(2, $usa->products_specificJoins->count());
+        $this->assertEquals(7, $uk->productsSpecificJoins->count());
+        $this->assertEquals(2, $usa->productsSpecificJoins->count());
     }
 
-    public function testHasManyViaMany_arrayjoins()
+    public function testHasManyViaManyArrayjoins()
     {
         [$uk, $usa] = $this->setUpData();
 
-        $this->assertEquals(7, $uk->products_usingArray_joins->count());
-        $this->assertEquals(2, $usa->products_usingArray_joins->count());
+        $this->assertEquals(7, $uk->productsUsingArrayJoins->count());
+        $this->assertEquals(2, $usa->productsUsingArrayJoins->count());
     }
 
-    public function testHasManyViaMany_SpecificJoinKeys()
+    public function testHasManyViaManySpecificJoinKeys()
     {
         [$uk, $usa] = $this->setUpData();
 
-        $this->assertEquals(7, $uk->products_specificJoinKeys->count());
-        $this->assertEquals(2, $usa->products_specificJoinKeys->count());
+        $this->assertEquals(7, $uk->productsSpecificJoinKeys->count());
+        $this->assertEquals(2, $usa->productsSpecificJoinKeys->count());
     }
 
 
-    public function testHasManyViaMany_arrayModels()
+    public function testHasManyViaManyArrayModels()
     {
         [$uk, $usa] = $this->setUpData();
 
-        $this->assertEquals(7, $uk->products_usingArray_models->count());
-        $this->assertEquals(2, $usa->products_usingArray_models->count());
+        $this->assertEquals(7, $uk->productsUsingArrayModels->count());
+        $this->assertEquals(2, $usa->productsUsingArrayModels->count());
     }
 
-    public function testHasManyViaMany_mixedOkay()
+    public function testHasManyViaManyMixedOkay()
     {
         [$uk, $usa] = $this->setUpData();
 
-        $this->assertEquals(7, $uk->products_mixedOkay->count());
-        $this->assertEquals(2, $usa->products_mixedOkay->count());
+        $this->assertEquals(7, $uk->productsMixedOkay->count());
+        $this->assertEquals(2, $usa->productsMixedOkay->count());
     }
 
-    public function testHasManyViaMany_mixedBad()
+    public function testHasManyViaManyMixedBad()
     {
         $this->expectException(\InvalidArgumentException::class);
         [$uk, $usa] = $this->setUpData();
 
-        $this->assertEquals(7, $uk->products_mixedBad->count());
-        $this->assertEquals(2, $usa->products_mixedBad->count());
+        $this->assertEquals(7, $uk->productsMixedBad->count());
+        $this->assertEquals(2, $usa->productsMixedBad->count());
     }
 
-    public function testHasManyViaMany_eagerLoad()
+    public function testHasManyViaManyEagerLoad()
     {
         $this->setUpData();
 
         $regions = Region::with('products')->get();
 
         $this->assertEquals(7, $regions->get(0)->products->count());
-        $this->assertEquals(2,  $regions->get(1)->products->count());
+        $this->assertEquals(2, $regions->get(1)->products->count());
     }
 
-    protected function setUpData() {
+    protected function setUpData()
+    {
          // Setup all the links
         $uk = Region::create(['name' => 'Uk']);
         $usa = Region::create(['name' => 'USA']);
@@ -130,7 +131,4 @@ class TestHasManyViaMany extends TestCase
 
         return [$uk, $usa];
     }
-
-
-
 }

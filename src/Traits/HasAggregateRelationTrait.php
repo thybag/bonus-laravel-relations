@@ -13,7 +13,7 @@ trait HasAggregateRelationTrait
      *
      * @param $related - parent model name
      * @param $relation_key - key to group on
-     * 
+     *
      * @return HasAggregate Relation
      */
     public function hasAggregate(string $related, string $relation_key = null, string $sql = null)
