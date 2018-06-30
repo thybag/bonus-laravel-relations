@@ -1,0 +1,27 @@
+{
+    "name": "thybag/bonus-laravel-relations",
+    "description": "Additional eloquent ORM relation types for laravel.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Carl Saggs",
+            "email": "carl@saggs.co.uk"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "thybag\\BonusLaravelRelations\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "thybag\\BonusLaravelRelations\\Test\\": "tests/"
+        }
+    },
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "^7",
+        "orchestra/testbench": "^3.6.4"
+    }
+}
