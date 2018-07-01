@@ -69,6 +69,15 @@ class TestHasManyViaMany extends TestCase
         $this->assertEquals(2, $usa->productsMixedOkay->count());
     }
 
+    public function testHasManyViaManyUsingArrayJoinsWithModels()
+    {
+        [$uk, $usa] = $this->setUpData();
+
+        $this->assertEquals(7, $uk->productsUsingArrayJoinsWithModels->count());
+        $this->assertEquals(2, $usa->productsUsingArrayJoinsWithModels->count());
+    }
+
+
     public function testHasManyViaManyMixedBad()
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -76,6 +85,15 @@ class TestHasManyViaMany extends TestCase
 
         $this->assertEquals(7, $uk->productsMixedBad->count());
         $this->assertEquals(2, $usa->productsMixedBad->count());
+    }
+
+    public function testHasManyViaManyWithMysteryObject()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        [$uk, $usa] = $this->setUpData();
+
+        $this->assertEquals(7, $uk->productsWithMysteryObject->count());
+        $this->assertEquals(2, $usa->productsWithMysteryObject->count());
     }
 
     public function testHasManyViaManyEagerLoad()
@@ -88,11 +106,22 @@ class TestHasManyViaMany extends TestCase
         $this->assertEquals(2, $regions->get(1)->products->count());
     }
 
+    public function testHasManyViaManyWhereHas()
+    {
+        $this->setUpData();
+        $regions = Region::whereHas('products')->get();
+        $this->assertEquals(2, $regions->count());
+
+        $regions = Region::whereHas('productsUsingArrayJoins')->get();
+        $this->assertEquals(2, $regions->count());
+    }
+
     protected function setUpData()
     {
          // Setup all the links
         $uk = Region::create(['name' => 'Uk']);
         $usa = Region::create(['name' => 'USA']);
+        $france = Region::create(['name' => 'France']);
 
         $shop1 = Shop::create(['name' => 'CheeseExpress']);
         $shop1->products()->save(Product::make(['name' => 'Cheese', 'amount' => 5, 'value' => 5]));

@@ -104,7 +104,6 @@ class HasManyViaMany extends Relation
         // Finalize
         $this->query->selectRaw($this->related->getTable() . '.*, ' . $this->finalKey . ' as parent_key');
 
-        // dd($this->query->toSql());
         return $this->query->get($columns);
     }
 
@@ -126,7 +125,7 @@ class HasManyViaMany extends Relation
         foreach ($this->relationArray as $join) {
             // Array? or just a raw class
             if (is_array($join)) {
-                $this->handleJoinVia($join[0], $join[1], $join[2]);
+                call_user_func_array([$this, 'handleJoinVia'], $join);
             } elseif (class_exists($join)) {
                 $this->handleJoinVia($join);
             } else {
@@ -205,5 +204,24 @@ class HasManyViaMany extends Relation
         }
 
         return $models;
+    }
+
+    /**
+     * Add the constraints for an internal relationship existence query.
+     *
+     * Essentially, these queries compare on column names like whereColumn.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  \Illuminate\Database\Eloquent\Builder  $parentQuery
+     * @param  array|mixed $columns
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function getRelationExistenceQuery(Builder $query, Builder $parentQuery, $columns = ['*'])
+    {   
+        $this->initJoins();
+
+        return $this->query->select($columns)->whereColumn(
+            $this->getQualifiedParentKeyName(), '=', $this->finalKey
+        );
     }
 }

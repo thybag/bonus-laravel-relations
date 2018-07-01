@@ -57,6 +57,32 @@ class Region extends Model
         );
     }
 
+    public function productsUsingArrayJoinsWithModels()
+    {
+        return $this->hasManyViaMany(
+            Product::class,
+            'id',
+            'franchises.region_id',
+            [
+                [Shop::class, 'shops.id', 'products.shop_id'],
+                [Franchise::class]
+            ]
+        );
+    }
+
+    public function productsWithMysteryObject()
+    {
+        return $this->hasManyViaMany(
+            Product::class,
+            'id',
+            'franchises.region_id',
+            [
+                [Shop::class, 'shops.id', 'products.shop_id'],
+                new Product
+            ]
+        );
+    }
+
     public function productsUsingArrayModels()
     {
         return $this->hasManyViaMany(
