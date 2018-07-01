@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 trait BonusRelationsTrait
 {
     use HasMethodRelationTrait;
+    use BelongsToOneRelationTrait;
     use HasAggregateRelationTrait;
     use BelongsToMorphRelationTrait;
     use HasManyViaManyRelationTrait;

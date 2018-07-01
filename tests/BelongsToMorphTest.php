@@ -2,7 +2,6 @@
 namespace thybag\BonusLaravelRelations\Test;
 
 use Orchestra\Testbench\TestCase;
-use Illuminate\Support\Facade\Schema;
 use thybag\BonusLaravelRelations\Test\Models\Shop;
 use thybag\BonusLaravelRelations\Test\Models\Product;
 use thybag\BonusLaravelRelations\Test\Models\Note;

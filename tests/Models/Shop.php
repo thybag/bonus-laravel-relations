@@ -42,4 +42,14 @@ class Shop extends Model
     {
         return $this->morphMany(Note::class, 'noteable');
     }
+
+    public function ratings()
+    {
+        return $this->BelongsToMany(Rating::class, 'shop_rating');
+    }
+
+    public function latestRating()
+    {
+        return $this->BelongsToOne(Rating::class, 'shop_rating')->latest('created_at');
+    }
 }

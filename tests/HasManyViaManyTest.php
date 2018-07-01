@@ -3,9 +3,9 @@ namespace thybag\BonusLaravelRelations\Test;
 
 use Orchestra\Testbench\TestCase;
 use thybag\BonusLaravelRelations\Test\Models\Shop;
+use thybag\BonusLaravelRelations\Test\Models\Region;
 use thybag\BonusLaravelRelations\Test\Models\Product;
 use thybag\BonusLaravelRelations\Test\Models\Franchise;
-use thybag\BonusLaravelRelations\Test\Models\Region;
 
 class TestHasManyViaMany extends TestCase
 {
