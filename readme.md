@@ -15,7 +15,7 @@ All licensed under the MIT license.
 2. Include the `use thybag\BonusLaravelRelations\Traits\BonusRelationsTrait;` in to your model (or base model if you want them everywhere.)
 3. Use the relations as you would any other.
 
-Relations can be added one by one if only if you would prefer not to have all of them..
+The relation traits can also be added individually if you prefer that.
 
 # Relations 
 
