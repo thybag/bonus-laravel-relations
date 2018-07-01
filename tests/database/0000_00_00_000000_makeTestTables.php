@@ -45,6 +45,19 @@ class MakeTestTables extends Migration
             $table->integer('noteable_id');
             $table->string('noteable_type');
         });
+
+        Schema::create('ratings', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('score');
+
+            $table->timestamp('created_at');
+        });
+
+        Schema::create('shop_rating', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('rating_id');
+            $table->integer('shop_id');
+        });
     }
 
     /**
