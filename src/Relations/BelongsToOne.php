@@ -9,9 +9,9 @@ class BelongsToOne extends BelongsToMany
     /**
      * Match the eagerly loaded results to their parents.
      *
-     * @param  array   $models
-     * @param Collection  $results
-     * @param  string  $relation
+     * @param array $models
+     * @param Collection $results
+     * @param string $relation
      * @return array
      */
     public function match(array $models, Collection $results, $relation)

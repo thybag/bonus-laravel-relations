@@ -30,7 +30,7 @@ public function shop()
 ```
 
 ### HasManyViaMany
-Define a relation via an unlimited amount of middle tables.
+Define a relation via an unlimited number of middle tables.
 
 ```php
 public function products()
@@ -63,5 +63,15 @@ public function totalValue()
     return $this->hasMethod(function () {
         return ['total' => ($this->amount * $this->value)];
     });
+}
+```
+
+### BelongsToOne
+Define a one-to-one relation through a pivot table relationship.
+
+```php
+public function latestRating()
+{
+    return $this->belongsToOne(Rating::class, 'shop_rating')->latest('created_at');
 }
 ```
