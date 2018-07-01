@@ -217,11 +217,13 @@ class HasManyViaMany extends Relation
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function getRelationExistenceQuery(Builder $query, Builder $parentQuery, $columns = ['*'])
-    {   
+    {
         $this->initJoins();
 
         return $this->query->select($columns)->whereColumn(
-            $this->getQualifiedParentKeyName(), '=', $this->finalKey
+            $this->getQualifiedParentKeyName(),
+            '=',
+            $this->finalKey
         );
     }
 }
