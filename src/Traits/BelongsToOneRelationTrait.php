@@ -17,8 +17,15 @@ trait BelongsToOneRelationTrait
      * @param  string  $relatedKey
      * @return BelongsToOne
      */
-    public function belongsToOne($related, $table = null, $foreignKey = null, $parentKey = null, $relation = null, $parentOtherKey = null, $relatedKey = null)
-    {
+    public function belongsToOne(
+        $related,
+        $table = null,
+        $foreignKey = null,
+        $parentKey = null,
+        $relation = null,
+        $parentOtherKey = null,
+        $relatedKey = null
+    ) {
         if (is_null($relation)) {
             $relation = $this->getRelations();
         }
@@ -28,9 +35,17 @@ trait BelongsToOneRelationTrait
         }
 
         $instance = new $related;
-        $foreignPivotKey = $foreignKey ?: $this->getForeignKey();
         $relatedPivotKey = (empty($parentKey)) ? $instance->getForeignKey() : $parentKey;
 
-        return new BelongsToOne($instance->newQuery(), $this, $table, $foreignPivotKey, $relatedPivotKey, $parentOtherKey ?: $this->getKeyName(), $relatedKey ?: $instance->getKeyName(), $relation);
+        return new BelongsToOne(
+            $instance->newQuery(),
+            $this,
+            $table,
+            $foreignKey ?: $this->getForeignKey(),
+            $relatedPivotKey,
+            $parentOtherKey ?: $this->getKeyName(),
+            $relatedKey ?: $instance->getKeyName(),
+            $relation
+        );
     }
 }

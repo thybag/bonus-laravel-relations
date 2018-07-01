@@ -67,7 +67,7 @@ public function totalValue()
 ```
 
 ### BelongsToOne
-Define a one-to-one relation through a pivot table relationship.
+Define a one-to-one relation through a pivot table.
 
 ```php
 public function latestRating()

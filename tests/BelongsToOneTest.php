@@ -45,5 +45,4 @@ class TestBelongsToOne extends TestCase
         $this->assertEquals(5, $results->get(0)->latestRating->score);
         $this->assertEquals(8, $results->get(1)->latestRating->score);
     }
-
 }

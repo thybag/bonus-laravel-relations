@@ -38,7 +38,7 @@ class BelongsToOne extends BelongsToMany
         $foreign = $this->foreignPivotKey;
         $dictionary = [];
         foreach ($results as $result) {
-            // Add first result to dict only - don't override with later ones if 
+            // Add first result to dict only - don't override with later ones if
             // we ended up with multiple
             $key = $result->pivot->$foreign;
             if (!isset($dictionary[$key])) {
