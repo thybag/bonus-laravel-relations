@@ -132,9 +132,29 @@ class HasAggregate extends Relation
 
     /**
      * Ensure relation can be used in whereHas's
+     * Remember to use having not where on aggregate params
      */
-    public function getExistenceCompareKey()
+    public function getRelationExistenceQuery(Builder $query, Builder $parentQuery, $columns = ['*'])
     {
-        return $this->relation_key;
+        // Set up basic query
+        $query->groupBy($this->relation_key)
+        ->whereColumn(
+            $this->getQualifiedParentKeyName(),
+            '=',
+            $this->relation_key
+        );
+
+        // Get select sql from builder (if set via selectRaw)
+        if (!empty($this->query->getQuery()->columns)) {
+             $select = implode(', ', array_merge($this->query->getQuery()->columns));
+             $query->selectRaw($select);
+        }
+
+        // Get via aggregate sql val if set using that method
+        if (!empty($this->aggregate_sql)) {
+             $query->selectRaw($this->aggregate_sql);
+        }
+       
+        return $query;
     }
 }
