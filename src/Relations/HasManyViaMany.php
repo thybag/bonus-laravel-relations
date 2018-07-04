@@ -29,7 +29,7 @@ class HasManyViaMany extends Relation
 
     /**
      * Set up many via many
-     * 
+     *
      * @param Builder $query         [description]
      * @param Model   $parent        [description]
      * @param [type]  $foreignKey    [description]
@@ -93,7 +93,8 @@ class HasManyViaMany extends Relation
         $this->query = $this->query->leftJoin($table, $leftColumn, $rightColumn);
     }
 
-    protected function qualifyKey($key, $table) {
+    protected function qualifyKey($key, $table)
+    {
         return strpos($key, '.') !== false ? $key : "$table.$key";
     }
 
@@ -129,7 +130,7 @@ class HasManyViaMany extends Relation
     {
         // No columns? default to *
         if (!$this->query->getQuery()->columns) {
-            $columns = $columns == ['*'] ? 'DISTINCT '.$this->related->getTable() . '.*' : $columns;
+            $columns = $columns == ['*'] ? 'DISTINCT ' . $this->related->getTable() . '.*' : $columns;
             $this->query->selectRaw($columns);
         }
 
@@ -290,7 +291,7 @@ class HasManyViaMany extends Relation
             $this->getQualifiedParentKeyName(),
             '=',
             $this->finalKey
-        );    
+        );
     }
 
     /**
@@ -302,8 +303,8 @@ class HasManyViaMany extends Relation
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function getRelationExistenceQueryForSelfRelation(Builder $query, Builder $parentQuery, $columns = ['*'])
-    {   
-        $this->query->from($this->related->getTable().' as '.$hash = $this->getRelationCountHash());
+    {
+        $this->query->from($this->related->getTable() . ' as ' . $hash = $this->getRelationCountHash());
         $this->related->setTable($hash);
 
         // Apply joins
@@ -323,7 +324,6 @@ class HasManyViaMany extends Relation
      */
     public function getRelationCountHash()
     {
-        return 'laravel_reserved_'.static::$selfJoinCount++;
+        return 'laravel_reserved_' . static::$selfJoinCount++;
     }
-
 }
