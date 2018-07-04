@@ -125,12 +125,12 @@ class TestHasManyViaMany extends TestCase
     public function testHasManyViaManyWhereHasWithOptions()
     {
         $this->setUpData();
-        $regions = Region::whereHas('products', function($q){
+        $regions = Region::whereHas('products', function ($q) {
             $q->where('amount', '<', 10);
         })->get();
         $this->assertEquals(1, $regions->count());
 
-        $regions = Region::whereHas('productsUsingArrayJoins', function($q){
+        $regions = Region::whereHas('productsUsingArrayJoins', function ($q) {
             $q->where('amount', '<', 10);
         })->get();
         $this->assertEquals(1, $regions->count());
@@ -141,8 +141,8 @@ class TestHasManyViaMany extends TestCase
         $this->setUpData();
 
         // Region with products sourced from a region with its own products
-        $regions = Region::whereHas('products', function($q){
-            $q->whereHas('sourceRegion', function($q){
+        $regions = Region::whereHas('products', function ($q) {
+            $q->whereHas('sourceRegion', function ($q) {
                 $q->whereHas('products');
             });
         })->get();
@@ -170,8 +170,8 @@ class TestHasManyViaMany extends TestCase
         [$uk, $usa] = $this->setUpData();
 
         // Region with products sourced from a region with its own products
-        $regions = Region::whereHas('regionsMyProductsAreSourcedFrom', function($q) {
-            $q->where($q->getModel()->getTable().'.name', 'France');
+        $regions = Region::whereHas('regionsMyProductsAreSourcedFrom', function ($q) {
+            $q->where($q->getModel()->getTable() . '.name', 'France');
         })->get();
 
         $this->assertEquals(2, $regions->count());
