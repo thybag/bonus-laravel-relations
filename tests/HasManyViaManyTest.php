@@ -96,6 +96,16 @@ class TestHasManyViaMany extends TestCase
         $this->assertEquals(2, $usa->productsWithMysteryObject->count());
     }
 
+    public function testHasManyViaManyCustomSelects()
+    {
+        [$uk, $usa] = $this->setUpData();
+
+        $this->assertEquals(20, $uk->productsAggreggated->get(0)->amount);
+        $this->assertEquals(9, $uk->productsAggreggated->get(0)->value);
+    }
+
+
+
     public function testHasManyViaManyEagerLoad()
     {
         $this->setUpData();
