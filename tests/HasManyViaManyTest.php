@@ -52,7 +52,6 @@ class TestHasManyViaMany extends TestCase
         $this->assertEquals(2, $usa->productsSpecificJoinKeys->count());
     }
 
-
     public function testHasManyViaManyArrayModels()
     {
         [$uk, $usa] = $this->setUpData();
@@ -76,7 +75,6 @@ class TestHasManyViaMany extends TestCase
         $this->assertEquals(7, $uk->productsUsingArrayJoinsWithModels->count());
         $this->assertEquals(2, $usa->productsUsingArrayJoinsWithModels->count());
     }
-
 
     public function testHasManyViaManyMixedBad()
     {
@@ -104,8 +102,6 @@ class TestHasManyViaMany extends TestCase
         $this->assertEquals(9, $uk->productsAggreggated->get(0)->value);
     }
 
-
-
     public function testHasManyViaManyEagerLoad()
     {
         $this->setUpData();
@@ -126,6 +122,61 @@ class TestHasManyViaMany extends TestCase
         $this->assertEquals(2, $regions->count());
     }
 
+    public function testHasManyViaManyWhereHasWithOptions()
+    {
+        $this->setUpData();
+        $regions = Region::whereHas('products', function($q){
+            $q->where('amount', '<', 10);
+        })->get();
+        $this->assertEquals(1, $regions->count());
+
+        $regions = Region::whereHas('productsUsingArrayJoins', function($q){
+            $q->where('amount', '<', 10);
+        })->get();
+        $this->assertEquals(1, $regions->count());
+    }
+
+    public function testHasManyViaManyWhereHasDoubleTableUse()
+    {
+        $this->setUpData();
+
+        // Region with products sourced from a region with its own products
+        $regions = Region::whereHas('products', function($q){
+            $q->whereHas('sourceRegion', function($q){
+                $q->whereHas('products');
+            });
+        })->get();
+
+        $this->assertEquals(1, $regions->count());
+    }
+
+
+    public function testHasManyViaManySameModelResults()
+    {
+        [$uk, $usa] = $this->setUpData();
+
+        $regions = $uk->regionsMyProductsAreSourcedFrom;
+        $this->assertEquals(2, $regions->count());
+
+        // Eager
+        $regions = Region::with('regionsMyProductsAreSourcedFrom')->get();
+        $this->assertEquals(2, $regions->get(0)->regionsMyProductsAreSourcedFrom->count());
+        $this->assertEquals(1, $regions->get(1)->regionsMyProductsAreSourcedFrom->count());
+    }
+
+
+    public function testHasManyViaManySameModelResultsWhereHas()
+    {
+        [$uk, $usa] = $this->setUpData();
+
+        // Region with products sourced from a region with its own products
+        $regions = Region::whereHas('regionsMyProductsAreSourcedFrom', function($q) {
+            $q->where($q->getModel()->getTable().'.name', 'France');
+        })->get();
+
+        $this->assertEquals(2, $regions->count());
+    }
+
     protected function setUpData()
     {
          // Setup all the links
@@ -134,12 +185,12 @@ class TestHasManyViaMany extends TestCase
         $france = Region::create(['name' => 'France']);
 
         $shop1 = Shop::create(['name' => 'CheeseExpress']);
-        $shop1->products()->save(Product::make(['name' => 'Cheese', 'amount' => 5, 'value' => 5]));
-        $shop1->products()->save(Product::make(['name' => 'Ham', 'amount' => 5, 'value' => 2]));
-        $shop1->products()->save(Product::make(['name' => 'Eggs', 'amount' => 10, 'value' => 2]));
+        $shop1->products()->save(Product::make(['name' => 'Cheese', 'amount' => 5, 'value' => 5, 'source_region_id' => $france->id]));
+        $shop1->products()->save(Product::make(['name' => 'Ham', 'amount' => 5, 'value' => 2, 'source_region_id' => $france->id]));
+        $shop1->products()->save(Product::make(['name' => 'Eggs', 'amount' => 10, 'value' => 2, 'source_region_id' => $france->id]));
 
         $shop2 = Shop::create(['name' => 'CheeseCo']);
-        $shop2->products()->save(Product::make(['name' => 'MegaCheese', 'amount' => 5, 'value' => 5]));
+        $shop2->products()->save(Product::make(['name' => 'MegaCheese', 'amount' => 5, 'value' => 5, 'source_region_id' => $usa->id]));
 
         $shop3 = Shop::create(['name' => 'BatCheese']);
         $shop3->products()->save(Product::make(['name' => 'Hyper cheese', 'amount' => 5, 'value' => 5]));
@@ -162,8 +213,8 @@ class TestHasManyViaMany extends TestCase
         $franchise = Franchise::create(['name' => 'Pie Inc USA']);
 
         $shop = Shop::create(['name' => 'American PieLand']);
-        $shop->products()->save(Product::make(['name' => 'Cool pie', 'amount' => 10, 'value' => 1]));
-        $shop->products()->save(Product::make(['name' => 'Nice pie', 'amount' => 10, 'value' => 1]));
+        $shop->products()->save(Product::make(['name' => 'Cool pie', 'amount' => 10, 'value' => 1, 'source_region_id' => $france->id]));
+        $shop->products()->save(Product::make(['name' => 'Nice pie', 'amount' => 10, 'value' => 1, 'source_region_id' => $france->id]));
         $franchise->shops()->save($shop);
 
         $usa->franchises()->save($franchise);
