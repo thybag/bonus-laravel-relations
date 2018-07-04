@@ -20,6 +20,22 @@ class HasManyViaMany extends Relation
     // Try and be smart
     protected $previousModel = false;
 
+    /**
+     * The count of self joins.
+     *
+     * @var int
+     */
+    protected static $selfJoinCount = 0;
+
+    /**
+     * Set up many via many
+     *
+     * @param Builder $query         [description]
+     * @param Model   $parent        [description]
+     * @param [type]  $foreignKey    [description]
+     * @param [type]  $finalKey      [description]
+     * @param array   $relationArray [description]
+     */
     public function __construct(Builder $query, Model $parent, $foreignKey = null, $finalKey = null, $relationArray = [])
     {
         $this->foreignKey = $foreignKey; // model key
@@ -37,7 +53,6 @@ class HasManyViaMany extends Relation
      */
     protected function handleJoinVia(string $table, string $leftColumn = null, string $rightColumn = null)
     {
-
         // If previousModel === false, we are starting a new query
         if ($this->previousModel === false) {
             $this->previousModel = $this->related;
@@ -51,13 +66,17 @@ class HasManyViaMany extends Relation
 
             // No left col, grab the prev model & current foreignKey
             if (empty($leftColumn)) {
-                $leftColumn = $this->previousModel->getTable() . '.' . $instance->getForeignKey();
+                $leftColumn = $instance->getForeignKey();
             }
 
             // No right col? Grab the current table & the prev models key
             if (empty($rightColumn)) {
-                $rightColumn = $table . '.' . $this->previousModel->getKeyName();
+                $rightColumn = $this->previousModel->getKeyName();
             }
+
+            // Attempt to auto qualify any table keys
+            $leftColumn = $this->qualifyKey($leftColumn, $this->previousModel->getTable());
+            $rightColumn = $this->qualifyKey($rightColumn, $table);
 
             // Update previous model pointer
             $this->previousModel = $instance;
@@ -74,6 +93,11 @@ class HasManyViaMany extends Relation
         $this->query = $this->query->leftJoin($table, $leftColumn, $rightColumn);
     }
 
+    protected function qualifyKey($key, $table)
+    {
+        return strpos($key, '.') !== false ? $key : "$table.$key";
+    }
+
     /**
      * @param  Class|string $table - class of table name
      * @param  string $leftColumn for join
@@ -82,7 +106,8 @@ class HasManyViaMany extends Relation
      */
     public function via($table, $leftColumn = null, $rightColumn = null)
     {
-        $this->handleJoinVia($table, $leftColumn, $rightColumn);
+        // Push to joins array
+        $this->relationArray[] = [$table, $leftColumn, $rightColumn];
         return $this;
     }
 
@@ -96,15 +121,52 @@ class HasManyViaMany extends Relation
     }
 
     /**
+     * Select required columns from tables
+     *
+     * @param  array  $columns
+     * @return array  $columns
+     */
+    protected function applySelects($columns = ['*'])
+    {
+        // No columns? default to *
+        if (!$this->query->getQuery()->columns) {
+            $columns = $columns == ['*'] ? 'DISTINCT ' . $this->related->getTable() . '.*' : $columns;
+            $this->query->selectRaw($columns);
+        }
+
+        // Add selection key
+        $this->query->selectRaw($this->finalKey . ' as parent_key');
+
+        return $columns;
+    }
+
+    /**
      * @param  Actually grab data
      * @return Collection
      */
     public function get($columns = ['*'])
     {
-        // Finalize
-        $this->query->selectRaw($this->related->getTable() . '.*, ' . $this->finalKey . ' as parent_key');
+        // Finalize & get
+        $this->applySelects($columns);
+        $this->initJoins();
 
         return $this->query->get($columns);
+    }
+
+    /**
+     * Get a paginator for the "select" statement.
+     *
+     * @param  int  $perPage
+     * @param  array  $columns
+     * @param  string  $pageName
+     * @param  int  $page
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function paginate($perPage = null, $columns = ['*'], $pageName = 'page', $page = null)
+    {
+        $columns = $this->applySelects($columns);
+        $this->initJoins();
+        return $this->query->paginate($perPage, $columns, $pageName, $page);
     }
 
     /**
@@ -140,7 +202,6 @@ class HasManyViaMany extends Relation
     public function addConstraints()
     {
         if (static::$constraints) {
-            $this->initJoins();
             $this->query->where('parent_key', $this->parent->{$this->parent->getKeyName()});
         }
     }
@@ -218,6 +279,35 @@ class HasManyViaMany extends Relation
      */
     public function getRelationExistenceQuery(Builder $query, Builder $parentQuery, $columns = ['*'])
     {
+        if ($parentQuery->getQuery()->from == $query->getQuery()->from) {
+            return $this->getRelationExistenceQueryForSelfRelation($query, $parentQuery, $columns);
+        }
+
+        // Apply joins
+        $this->initJoins();
+
+        // Normal behavior
+        return $this->query->select($columns)->whereColumn(
+            $this->getQualifiedParentKeyName(),
+            '=',
+            $this->finalKey
+        );
+    }
+
+    /**
+     * Add the constraints for a relationship query on the same table.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  \Illuminate\Database\Eloquent\Builder  $parentQuery
+     * @param  array|mixed  $columns
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function getRelationExistenceQueryForSelfRelation(Builder $query, Builder $parentQuery, $columns = ['*'])
+    {
+        $this->query->from($this->related->getTable() . ' as ' . $hash = $this->getRelationCountHash());
+        $this->related->setTable($hash);
+
+        // Apply joins
         $this->initJoins();
 
         return $this->query->select($columns)->whereColumn(
@@ -225,5 +315,15 @@ class HasManyViaMany extends Relation
             '=',
             $this->finalKey
         );
+    }
+
+    /**
+     * Get a relationship join table hash.
+     *
+     * @return string
+     */
+    public function getRelationCountHash()
+    {
+        return 'laravel_reserved_' . static::$selfJoinCount++;
     }
 }

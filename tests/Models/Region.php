@@ -109,4 +109,17 @@ class Region extends Model
             ->via('shops', 'shops.id', 'products.shop_id')
             ->via(Franchise::class);
     }
+
+    // More evil ones
+    public function productsAggreggated()
+    {
+        return $this->hasManyViaMany(Product::class)->via(Shop::class)->via(Franchise::class)
+        ->selectRaw('SUM(amount) as amount, SUM(value) as value')
+        ->groupBy('shop_id');
+    }
+
+    public function regionsMyProductsAreSourcedFrom()
+    {
+        return $this->hasManyViaMany(Region::class)->via(Product::class, 'id', 'source_region_id')->via(Shop::class)->via(Franchise::class);
+    }
 }

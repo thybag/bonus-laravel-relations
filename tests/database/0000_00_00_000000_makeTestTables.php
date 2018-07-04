@@ -24,6 +24,8 @@ class MakeTestTables extends Migration
 
             $table->integer('amount');
             $table->integer('value');
+            
+            $table->integer('source_region_id')->nullable();
             $table->integer('shop_id')->nullable();
         });
 

@@ -15,12 +15,18 @@ class Product extends Model
         'name',
         'amount',
         'value',
+        'source_region_id',
         'shop_id'
     ];
 
     public function shop()
     {
         return $this->belongsTo(Shop::class);
+    }
+
+    public function sourceRegion()
+    {
+        return $this->belongsTo(Region::class);
     }
 
     public function notes()
