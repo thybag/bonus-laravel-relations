@@ -96,14 +96,33 @@ class HasManyViaMany extends Relation
     }
 
     /**
+     * Select required columns from tables
+     *
+     * @param  array  $columns
+     * @return array  $columns
+     */
+    protected function applySelects($columns = ['*'])
+    {
+        // No columns? default to *
+        if (!$this->query->getQuery()->columns) {
+            $columns = $columns == ['*'] ? $this->related->getTable() . '.*' : $columns;
+            $this->query->select($columns);
+        }
+
+        // Add selection key
+        $this->query->selectRaw($this->finalKey . ' as parent_key');
+
+        return $columns;
+    }
+
+    /**
      * @param  Actually grab data
      * @return Collection
      */
     public function get($columns = ['*'])
     {
-        // Finalize
-        $this->query->selectRaw($this->related->getTable() . '.*, ' . $this->finalKey . ' as parent_key');
-
+        // Finalize & get
+        $this->applySelects($columns);
         return $this->query->get($columns);
     }
 
