@@ -70,4 +70,11 @@ class TestHasMethod extends TestCase
         $test = HasMethodTestModel::make();
         $this->assertEquals('one', $test->callbackAsObject->a);
     }
+
+    public function testHasMethodEagerLoad()
+    {
+        $test = HasMethodTestModel::make();
+        $test->load('callbackAsObject');
+        $this->assertEquals('one', $test->callbackAsObject->a);
+    }
 }
