@@ -137,4 +137,21 @@ class HasMethod extends Relation
     public function addEagerConstraints(array $models)
     {
     }
+
+    /**
+     * Build model dictionary keyed by the relation's foreign key.
+     *
+     * @param  \Illuminate\Database\Eloquent\Collection  $results
+     * @return array
+     */
+    protected function buildDictionary(Collection $results)
+    {
+        $dictionary = [];
+         return $dictionary;
+    }
+
+    public function getEager()
+    {
+        return new Collection();
+    }
 }
