@@ -202,7 +202,7 @@ class HasManyViaMany extends Relation
     public function addConstraints()
     {
         if (static::$constraints) {
-            $this->query->where('parent_key', $this->parent->{$this->parent->getKeyName()});
+            $this->query->where($this->finalKey, $this->parent->{$this->parent->getKeyName()});
         }
     }
 
