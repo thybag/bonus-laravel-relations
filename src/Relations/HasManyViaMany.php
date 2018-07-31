@@ -184,6 +184,8 @@ class HasManyViaMany extends Relation
      */
     protected function initJoins()
     {
+        $joins = !empty($this->query->getQuery()->joins) ? $this->query->getQuery()->joins : [];
+        $this->query->getQuery()->joins = [];
         foreach ($this->relationArray as $join) {
             // Array? or just a raw class
             if (is_array($join)) {
@@ -194,6 +196,7 @@ class HasManyViaMany extends Relation
                 throw new InvalidArgumentException('Unknown join type passed to manyViaMany via array.');
             }
         }
+        $this->query->getQuery()->joins = array_merge($this->query->getQuery()->joins, $joins);
     }
 
     /**

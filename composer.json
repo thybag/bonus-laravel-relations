@@ -7,6 +7,10 @@
         {
             "name": "Carl Saggs",
             "email": "carl@saggs.co.uk"
+        },
+        {
+            "name": "Daniel Beauchamp",
+            "email": "db@crimasi.com"
         }
     ],
     "autoload": {
