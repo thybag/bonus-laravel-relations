@@ -2,6 +2,7 @@
 namespace thybag\BonusLaravelRelations\Test;
 
 use Orchestra\Testbench\TestCase;
+use thybag\BonusLaravelRelations\Test\Models\Note;
 use thybag\BonusLaravelRelations\Test\Models\Shop;
 use thybag\BonusLaravelRelations\Test\Models\Region;
 use thybag\BonusLaravelRelations\Test\Models\Product;
@@ -177,6 +178,21 @@ class TestHasManyViaMany extends TestCase
         $this->assertEquals(2, $regions->count());
     }
 
+    public function testHasManyViaManyCustomWheresAppliedBeforeJoins()
+    {
+        [$uk, $usa] = $this->setUpData();
+
+        // products with the note "Hi"
+        $results = $uk->products()
+            ->leftJoin('notes', function ($q) {
+                $q->on('noteable_id', 'products.id');
+            })
+            ->where('notes.note', 'Hi')
+            ->get();
+
+        $this->assertCount(1, $results);
+    }
+
     protected function setUpData()
     {
          // Setup all the links
@@ -187,7 +203,10 @@ class TestHasManyViaMany extends TestCase
         $shop1 = Shop::create(['name' => 'CheeseExpress']);
         $shop1->products()->save(Product::make(['name' => 'Cheese', 'amount' => 5, 'value' => 5, 'source_region_id' => $france->id]));
         $shop1->products()->save(Product::make(['name' => 'Ham', 'amount' => 5, 'value' => 2, 'source_region_id' => $france->id]));
-        $shop1->products()->save(Product::make(['name' => 'Eggs', 'amount' => 10, 'value' => 2, 'source_region_id' => $france->id]));
+
+        $product = Product::make(['name' => 'Eggs', 'amount' => 10, 'value' => 2, 'source_region_id' => $france->id]);
+        $shop1->products()->save($product);
+        $product->notes()->save(Note::make(['note' => 'Hi']));
 
         $shop2 = Shop::create(['name' => 'CheeseCo']);
         $shop2->products()->save(Product::make(['name' => 'MegaCheese', 'amount' => 5, 'value' => 5, 'source_region_id' => $usa->id]));

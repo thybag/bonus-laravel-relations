@@ -154,6 +154,21 @@ class HasManyViaMany extends Relation
     }
 
     /**
+     * Init joins before ToSqling to provide realistic output
+     *
+     * @param  array  $columns [description]
+     * @return [type]          [description]
+     */
+    public function toSql($columns = ['*'])
+    {
+        // Finalize & get
+        $this->applySelects($columns);
+        $this->initJoins();
+
+        return parent::toSql();
+    }
+
+    /**
      * Get a paginator for the "select" statement.
      *
      * @param  int  $perPage
@@ -184,8 +199,11 @@ class HasManyViaMany extends Relation
      */
     protected function initJoins()
     {
+        // Store existing joins and clear list
         $joins = !empty($this->query->getQuery()->joins) ? $this->query->getQuery()->joins : [];
         $this->query->getQuery()->joins = [];
+
+        // Apply relation joins
         foreach ($this->relationArray as $join) {
             // Array? or just a raw class
             if (is_array($join)) {
@@ -196,6 +214,8 @@ class HasManyViaMany extends Relation
                 throw new InvalidArgumentException('Unknown join type passed to manyViaMany via array.');
             }
         }
+
+        // Re-add existing joins to the end (we need to ensure relation joins run first)
         $this->query->getQuery()->joins = array_merge($this->query->getQuery()->joins, $joins);
     }
 
