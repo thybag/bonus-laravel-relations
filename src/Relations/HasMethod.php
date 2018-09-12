@@ -103,7 +103,7 @@ class HasMethod extends Relation
         }
 
         if (empty($results)) {
-            return null;
+            return $this->noData();
         } elseif ($this->returnCollection) {
             // Are we forcing to collection?
             if (is_array($results)) {
@@ -127,7 +127,15 @@ class HasMethod extends Relation
         }
 
         // Unsure how to deal with this?
-        return null;
+        return $this->noData();
+    }
+
+    /**
+     * Handle failure condition - return either null or empty collection
+     */
+    protected function noData()
+    {
+        return $this->returnCollection ? new Collection() : null;
     }
 
     // Ignored (required by abstract)
