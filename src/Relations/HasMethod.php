@@ -16,6 +16,7 @@ class HasMethod extends Relation
 {
     protected $method;
     protected $parent;
+    protected $withs = [];
 
     // Should this result be returned as a collection? Will default to inert model.
     protected $returnCollection;
@@ -110,10 +111,18 @@ class HasMethod extends Relation
                 // Map it in to one if its an array
                 $results = collect($results);
             }
+            // Apply with loads
+            if (is_a($results, 'Illuminate\Support\Collection') && !empty($this->withs)) {
+                $results->map(function ($model) {
+                    if (method_exists($model, 'load')) {
+                        $model->load($this->withs);
+                    }
+                });
+            }
             return $results;
         } elseif (is_a($results, 'Illuminate\Database\Eloquent\Collection') || is_a($results, 'Illuminate\Database\Eloquent\Model')) {
             // Is it already a real eloquent model or collection? return as is if so.
-            return $results;
+            return $results->load($this->withs);
         } elseif (is_a($results, 'Illuminate\Support\Collection')) {
             // Standard collection - make it a model.
             $result = $this->getInertModelInstance();
@@ -130,9 +139,6 @@ class HasMethod extends Relation
         return $this->noData();
     }
 
-    /**
-     * Handle failure condition - return either null or empty collection
-     */
     protected function noData()
     {
         return $this->returnCollection ? new Collection() : null;
@@ -161,5 +167,37 @@ class HasMethod extends Relation
     public function getEager()
     {
         return new Collection();
+    }
+
+    /**
+     * Set with/lazy load includes
+     *
+     * @param  [type] $with [description]
+     * @return [type]       [description]
+     */
+    public function with($with)
+    {
+        $this->withs = $with;
+    }
+
+    /**
+     * Mock getQuery to allow include pass through.
+     * @return [type] [description]
+     */
+    public function getQuery()
+    {
+        return new class($this) {
+            protected $parent = null;
+
+            public function __construct($parent)
+            {
+                $this->parent = $parent;
+            }
+
+            public function with($with)
+            {
+                $this->parent->with($with);
+            }
+        };
     }
 }
