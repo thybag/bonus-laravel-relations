@@ -113,7 +113,7 @@ class HasMethod extends Relation
             }
             // Apply with loads
             if (is_a($results, 'Illuminate\Support\Collection') && !empty($this->withs)) {
-                $results->map(function($model) {
+                $results->map(function ($model) {
                     if (method_exists($model, 'load')) {
                         $model->load($this->withs);
                     }
@@ -171,11 +171,12 @@ class HasMethod extends Relation
 
     /**
      * Set with/lazy load includes
-     * 
+     *
      * @param  [type] $with [description]
      * @return [type]       [description]
      */
-    public function with($with) {
+    public function with($with)
+    {
         $this->withs = $with;
     }
 
@@ -196,7 +197,7 @@ class HasMethod extends Relation
             public function with($with)
             {
                 $this->parent->with($with);
-            }   
+            }
         };
     }
 }
