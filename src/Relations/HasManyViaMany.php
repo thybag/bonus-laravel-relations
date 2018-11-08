@@ -154,6 +154,19 @@ class HasManyViaMany extends Relation
     }
 
     /**
+     * @param  Actually grab data
+     * @return Collection
+     */
+    public function first($columns = ['*'])
+    {
+        // Finalize & get
+        $this->applySelects($columns);
+        $this->initJoins();
+
+        return $this->query->first($columns);
+    }
+
+    /**
      * Init joins before ToSqling to provide realistic output
      *
      * @param  array  $columns [description]
