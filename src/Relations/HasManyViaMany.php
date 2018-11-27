@@ -167,7 +167,7 @@ class HasManyViaMany extends Relation
     }
     
     /**
-     * Impliment a count
+     * Implement a count
      * @param  columns
      * @return Int
      */
