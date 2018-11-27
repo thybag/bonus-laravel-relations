@@ -165,6 +165,19 @@ class HasManyViaMany extends Relation
 
         return $this->query->first($columns);
     }
+    
+    /**
+     * Impliment a count
+     * @param  columns
+     * @return Int
+     */
+    public function count($columns = ['*'])
+    {
+        // Finalize before count
+        $this->applySelects($columns);
+        $this->initJoins();
+        return $this->query->count($columns);
+    }
 
     /**
      * Init joins before ToSqling to provide realistic output
