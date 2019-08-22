@@ -19,7 +19,6 @@ class BelongsToOne extends BelongsToMany
         // Overides match so it only returns one model as the relation.
         $dictionary = $this->buildDictionary($results);
         foreach ($models as $model) {
-
             $key = $model->getAttribute($this->parentKey);
             if (isset($dictionary[$key])) {
                 $model->setRelation($relation, $dictionary[$key]);

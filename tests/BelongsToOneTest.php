@@ -58,6 +58,5 @@ class TestBelongsToOne extends TestCase
 
         $this->assertNotEmpty($product->aisle);
         $this->assertEquals($product->aisle->aisle_code, $aisle->aisle_code);
-
     }
 }
