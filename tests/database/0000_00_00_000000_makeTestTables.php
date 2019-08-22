@@ -67,8 +67,7 @@ class MakeTestTables extends Migration
             $table->increments('id');
             $table->integer('aisle_id');
             $table->integer('shop_id');
-            $table->timestamp('created_at');
-            $table->timestamp('updated_at');
+            $table->timestamps();
         });
 
         Schema::create('aisles', function (Blueprint $table) {
