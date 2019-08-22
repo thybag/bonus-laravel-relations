@@ -16,7 +16,8 @@ class Product extends Model
         'amount',
         'value',
         'source_region_id',
-        'shop_id'
+        'shop_id',
+        'stock_location_id',
     ];
 
     public function shop()
@@ -32,5 +33,10 @@ class Product extends Model
     public function notes()
     {
         return $this->morphMany(Note::class, 'noteable');
+    }
+
+    public function aisle()
+    {
+        return $this->belongsToOne(Aisle::class, 'stock_locations', 'id', 'aisle_id', 'stock_location_id', 'stock_location_id');
     }
 }
