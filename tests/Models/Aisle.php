@@ -1,10 +1,12 @@
 <?php
+
+
 namespace thybag\BonusLaravelRelations\Test\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use thybag\BonusLaravelRelations\Traits\BonusRelationsTrait;
 
-class Rating extends Model
+class Aisle extends Model
 {
     use BonusRelationsTrait;
 
@@ -12,13 +14,6 @@ class Rating extends Model
 
     protected $fillable = [
         'id',
-        'score',
-        'product',
-        'created_at'
+        'aisle_code',
     ];
-
-    public function noteable()
-    {
-        return $this->morphTo();
-    }
 }

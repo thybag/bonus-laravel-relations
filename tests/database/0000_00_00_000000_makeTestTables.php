@@ -27,6 +27,8 @@ class MakeTestTables extends Migration
             
             $table->integer('source_region_id')->nullable();
             $table->integer('shop_id')->nullable();
+
+            $table->integer('stock_location_id')->nullable();
         });
 
         Schema::create('franchises', function (Blueprint $table) {
@@ -51,7 +53,6 @@ class MakeTestTables extends Migration
         Schema::create('ratings', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('score');
-
             $table->timestamp('created_at');
         });
 
@@ -60,6 +61,21 @@ class MakeTestTables extends Migration
             $table->integer('rating_id');
             $table->integer('shop_id');
         });
+
+
+        Schema::create('stock_locations', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('aisle_id');
+            $table->integer('shop_id');
+            $table->timestamp('created_at');
+            $table->timestamp('updated_at');
+        });
+
+        Schema::create('aisles', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('aisle_code');
+        });
+
     }
 
     /**

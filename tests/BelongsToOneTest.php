@@ -3,8 +3,11 @@ namespace thybag\BonusLaravelRelations\Test;
 
 use Carbon\Carbon;
 use Orchestra\Testbench\TestCase;
+use thybag\BonusLaravelRelations\Test\Models\Aisle;
+use thybag\BonusLaravelRelations\Test\Models\Product;
 use thybag\BonusLaravelRelations\Test\Models\Shop;
 use thybag\BonusLaravelRelations\Test\Models\Rating;
+use thybag\BonusLaravelRelations\Test\Models\StockLocation;
 
 class TestBelongsToOne extends TestCase
 {
@@ -44,5 +47,17 @@ class TestBelongsToOne extends TestCase
 
         $this->assertEquals(5, $results->get(0)->latestRating->score);
         $this->assertEquals(8, $results->get(1)->latestRating->score);
+    }
+
+    public function testBelongsToOneViaPivotWithOtherParentKey()
+    {
+        $shop = Shop::create(['name' => 'CheeseExpress']);
+        $aisle = Aisle::create(['aisle_code' => 'Stinky Cheese Aisle #' . rand()]);
+        $location = StockLocation::create(['shop_id' => $shop->id, 'aisle_id' => $aisle->id]);
+        $product = Product::create(['name' => 'Stilton', 'amount' => 5, 'value' => 5, 'stock_location_id' => $location->id]);
+
+        $this->assertNotEmpty($product->aisle);
+        $this->assertEquals($product->aisle->aisle_code, $aisle->aisle_code);
+
     }
 }
