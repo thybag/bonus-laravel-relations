@@ -13,7 +13,6 @@ class Rating extends Model
     protected $fillable = [
         'id',
         'score',
-        'product',
         'created_at'
     ];
 
