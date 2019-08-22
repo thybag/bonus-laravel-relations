@@ -57,7 +57,7 @@ class TestBelongsToOne extends TestCase
         $product = Product::create(['name' => 'Stilton', 'amount' => 5, 'value' => 5, 'stock_location_id' => $location->id]);
 
         $this->assertNotEmpty($product->aisle);
-        $this->assertEquals( $aisle->aisle_code, $product->aisle->aisle_code);
+        $this->assertEquals($aisle->aisle_code, $product->aisle->aisle_code);
 
         $aisle2 = Aisle::create(['aisle_code' => 'Biohazard Aisle #' . rand()]);
         $product->aisle()->detach();
