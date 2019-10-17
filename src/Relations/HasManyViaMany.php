@@ -117,7 +117,7 @@ class HasManyViaMany extends Relation
      */
     public function addEagerConstraints(array $models)
     {
-        $this->query->whereIn($this->finalKey, $this->getKeys($models, $this->parent->getKeyName()));
+        $this->query->whereIn($this->finalKey, $this->getKeys($models, $this->foreignKey));
     }
 
     /**
@@ -165,7 +165,7 @@ class HasManyViaMany extends Relation
 
         return $this->query->first($columns);
     }
-    
+
     /**
      * Implement a count
      * @param  columns
@@ -251,7 +251,7 @@ class HasManyViaMany extends Relation
     public function addConstraints()
     {
         if (static::$constraints) {
-            $this->query->where($this->finalKey, $this->parent->{$this->parent->getKeyName()});
+            $this->query->where($this->finalKey, $this->parent->{$this->foreignKey});
         }
     }
 
