@@ -10,7 +10,7 @@ use thybag\BonusLaravelRelations\Test\Models\Franchise;
 
 class TestHasManyViaMany extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->loadMigrationsFrom(__DIR__ . '/database');
