@@ -1,0 +1,15 @@
+name: Run Tests
+
+on: pull_request
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install vendor
+      run: composer install
+    - name: Run linting
+      run: vendor/bin/phpcs 
+    - name: Run tests
+      run: vendor/bin/phpunit
