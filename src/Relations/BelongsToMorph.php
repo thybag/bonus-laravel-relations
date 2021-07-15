@@ -28,22 +28,6 @@ class BelongsToMorph extends BelongsTo
     }
 
     /**
-     * Add the constraints for a relationship query.
-     *
-     * @param  Builder  $query
-     * @param  Model  $parent
-     * @param  array|mixed  $columns
-     * @return Builder
-     */
-    public function getRelationQuery(Builder $query, Builder $parent, $columns = ['*'])
-    {
-        $table = $this->getParent()->getTable();
-        $query = parent::getRelationQuery($query, $parent, $columns);
-
-        return $query->where("{$table}.{$this->morphType}", '=', $this->morphName);
-    }
-
-    /**
      * Ensure relation can be used in whereHas's
      *
      * @param  Builder  $query
