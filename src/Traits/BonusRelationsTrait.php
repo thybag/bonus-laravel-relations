@@ -1,7 +1,6 @@
 <?php
 namespace thybag\BonusLaravelRelations\Traits;
 
-use App\Core\Models\Relations\BelongsToOne;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**
