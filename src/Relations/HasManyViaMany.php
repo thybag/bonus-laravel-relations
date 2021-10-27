@@ -223,7 +223,7 @@ class HasManyViaMany extends Relation
      * Handle predefined joins array
      * @return void
      */
-    protected function initJoins()
+    public function initJoins()
     {
         // Store existing joins and clear list
         $joins = !empty($this->query->getQuery()->joins) ? $this->query->getQuery()->joins : [];
@@ -243,6 +243,8 @@ class HasManyViaMany extends Relation
 
         // Re-add existing joins to the end (we need to ensure relation joins run first)
         $this->query->getQuery()->joins = array_merge($this->query->getQuery()->joins, $joins);
+
+        return $this;
     }
 
     /**
