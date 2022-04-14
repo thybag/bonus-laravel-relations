@@ -28,6 +28,14 @@ class Shop extends Model
         return $this->hasMany(Product::class);
     }
 
+
+    public function franchiseNotes()
+    {
+        return $this->hasManyViaMany(Note::class, 'franchise_id', 'notes.noteable_id')
+            ->via(Franchise::class, 'notes.noteable_id')
+            ->where('notes.noteable_type', Franchise::class);
+    }
+
     public function productTotals()
     {
         return $this->hasAggregate(Product::class, 'products.shop_id', $this->productTotalsSql);
@@ -45,11 +53,11 @@ class Shop extends Model
 
     public function ratings()
     {
-        return $this->BelongsToMany(Rating::class, 'shop_rating');
+        return $this->belongsToMany(Rating::class, 'shop_rating');
     }
 
     public function latestRating()
     {
-        return $this->BelongsToOne(Rating::class, 'shop_rating')->latest('created_at');
+        return $this->belongsToOne(Rating::class, 'shop_rating')->latest('created_at');
     }
 }
