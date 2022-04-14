@@ -31,7 +31,9 @@ class Shop extends Model
 
     public function franchiseNotes()
     {
-        return $this->hasManyViaMany(Note::class, 'franchise_id', 'notes.noteable_id')->via(Franchise::class, 'notes.noteable_id')->where('notes.noteable_type', Franchise::class);
+        return $this->hasManyViaMany(Note::class, 'franchise_id', 'notes.noteable_id')
+            ->via(Franchise::class, 'notes.noteable_id')
+            ->where('notes.noteable_type', Franchise::class);
     }
 
     public function productTotals()
