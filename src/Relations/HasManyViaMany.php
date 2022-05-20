@@ -321,7 +321,7 @@ class HasManyViaMany extends Relation
 
     /**
      * Overrider getQualifiedParentKeyName to use provided foreignKey
-     * 
+     *
      * @return string
      */
     public function getQualifiedParentKeyName()
