@@ -290,14 +290,14 @@ class HasManyViaMany extends Relation
         return $dictionary;
     }
 
-        /**
-         * Match the eagerly loaded results to their parents.
-         *
-         * @param  array   $models
-         * @param  \Illuminate\Database\Eloquent\Collection  $results
-         * @param  string  $relation
-         * @return array
-         */
+    /**
+     * Match the eagerly loaded results to their parents.
+     *
+     * @param  array   $models
+     * @param  \Illuminate\Database\Eloquent\Collection  $results
+     * @param  string  $relation
+     * @return array
+     */
     public function match(array $models, Collection $results, $relation)
     {
         $dictionary = $this->buildDictionary($results);
@@ -317,6 +317,16 @@ class HasManyViaMany extends Relation
         }
 
         return $models;
+    }
+
+    /**
+     * Overrider getQualifiedParentKeyName to use provided foreignKey
+     *
+     * @return string
+     */
+    public function getQualifiedParentKeyName()
+    {
+        return $this->parent->qualifyColumn($this->foreignKey);
     }
 
     /**
