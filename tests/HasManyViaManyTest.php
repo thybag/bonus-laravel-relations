@@ -113,6 +113,24 @@ class TestHasManyViaMany extends TestCase
         $this->assertEquals(2, $regions->get(1)->products->count());
     }
 
+
+    public function testHasManyViaManyAlternativeForeignKey()
+    {
+        $this->setUpData();
+
+        $shop = Shop::where('name', 'CheeseExpress')->first();
+        $this->assertEquals(2, $shop->franchiseNotes->count());
+
+        $results = Shop::with('franchiseNotes')->get()->toArray();
+        // All same franchise
+        $this->assertEquals(2, sizeof($results[0]['franchise_notes']));
+        $this->assertEquals(2, sizeof($results[1]['franchise_notes']));
+        $this->assertEquals(2, sizeof($results[2]['franchise_notes']));
+
+        $this->assertEquals(1, sizeof($results[3]['franchise_notes']));
+        $this->assertEquals(0, sizeof($results[4]['franchise_notes']));
+    }
+
     public function testHasManyViaManyWhereHas()
     {
         $this->setUpData();
@@ -219,12 +237,16 @@ class TestHasManyViaMany extends TestCase
         $franchise1->shops()->save($shop2);
         $franchise1->shops()->save($shop3);
 
+        $franchise1->notes()->save(Note::make(['note' => 'Secret Cheese']));
+        $franchise1->notes()->save(Note::make(['note' => 'Cheese is good']));
+
         $franchise2 = Franchise::create(['name' => 'Pie Inc']);
 
         $shop = Shop::create(['name' => 'PieLand']);
         $shop->products()->save(Product::make(['name' => 'Cool pie', 'amount' => 10, 'value' => 1]));
         $shop->products()->save(Product::make(['name' => 'Nice pie', 'amount' => 10, 'value' => 1]));
         $franchise2->shops()->save($shop);
+        $franchise2->notes()->save(Note::make(['note' => 'Secret Pie']));
 
         $uk->franchises()->save($franchise1);
         $uk->franchises()->save($franchise2);

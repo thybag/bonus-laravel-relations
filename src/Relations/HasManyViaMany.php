@@ -306,7 +306,8 @@ class HasManyViaMany extends Relation
         // link them up with their children using the keyed dictionary to make the
         // matching very convenient and easy work. Then we'll just return them.
         foreach ($models as $model) {
-            $key = $model->getKey();
+            // Get the id of the foreignKey on the model we are linking the relation too.
+            $key = $model->getAttribute($this->foreignKey);
 
             if (isset($dictionary[$key])) {
                 $value = $this->related->newCollection($dictionary[$key]);
