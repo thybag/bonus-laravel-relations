@@ -4,12 +4,12 @@ on: pull_request
 
 jobs:
   tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
     - uses: actions/checkout@v2
     - name: Install vendor
       run: composer install
     - name: Run linting
-      run: vendor/bin/phpcs 
+      run: vendor/bin/phpcs
     - name: Run tests
       run: vendor/bin/phpunit
