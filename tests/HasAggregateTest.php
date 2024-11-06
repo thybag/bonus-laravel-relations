@@ -4,6 +4,7 @@ namespace thybag\BonusLaravelRelations\Test;
 use Orchestra\Testbench\TestCase;
 use thybag\BonusLaravelRelations\Test\Models\Shop;
 use thybag\BonusLaravelRelations\Test\Models\Product;
+use thybag\BonusLaravelRelations\Test\Models\CustomInert;
 
 class TestHasAggregate extends TestCase
 {
@@ -129,5 +130,25 @@ class TestHasAggregate extends TestCase
             $q->having('total_products', '=', 7);
         })->count();
         $this->assertEquals(1, $count);
+    }
+
+    public function testHasAggregateWithCustomInertModel()
+    {
+        // Swap base model to be used by relationship
+        config(['bonus-laravel-relationships.inertModel' => CustomInert::class]);
+
+        $shop = Shop::create(['name' => 'CheeseExpress']);
+        $shop->products()->save(Product::make(['name' => 'Cheese', 'amount' => 5, 'value' => 5]));
+        $shop->products()->save(Product::make(['name' => 'Ham', 'amount' => 5, 'value' => 2]));
+        $shop->products()->save(Product::make(['name' => 'Eggs', 'amount' => 10, 'value' => 2]));
+
+        // right class
+        $this->assertEquals(CustomInert::class, get_class($shop->productTotals));
+        // Check custom model method exists
+        $this->assertEquals('hi', $shop->productTotals->hello());
+        // Still has right data
+        $this->assertEquals(20, $shop->productTotals->total_products);
+        $this->assertEquals(3, $shop->productTotals->unique_products);
+        $this->assertEquals(3, $shop->productTotals->average_product_value);
     }
 }

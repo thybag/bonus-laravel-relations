@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use thybag\BonusLaravelRelations\Traits\InertModelTrait;
 
 /**
  * Get Aggregate query data as a relation.
@@ -13,6 +14,8 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  */
 class HasAggregate extends Relation
 {
+    use InertModelTrait;
+
     // Key to link relation on
     protected $relation_key = null;
     // Aggregate sql - can be supplied by selectRaw instead.
@@ -28,6 +31,11 @@ class HasAggregate extends Relation
      */
     public function __construct(Builder $query, Model $parent, string $relation_key, string $sql = null)
     {
+        // The builder provided is for an instance of the real model. We want to swap this out for our
+        // inert model in order to return custom attributes based on the query. To do this we grab a copy
+        // of our InertModel and give it the table from the real one.
+        $query = $this->getInertModelInstance()->setTable($query->getModel()->getTable())->newQuery();
+
         // Set relation key
         $this->relation_key = $relation_key;
         $this->aggregate_sql = $sql;

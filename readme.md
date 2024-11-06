@@ -5,7 +5,7 @@ A selection of weird & wonderful additional relation types for laravel's eloquen
 Many of these are experimental and may behave in unexpected & none standard ways.
 
 On the bright side - it's tested!       
-[![Build Status](https://travis-ci.org/thybag/bonus-laravel-relations.svg?branch=master)](https://travis-ci.org/thybag/bonus-laravel-relations)
+![Build Status](https://github.com/thybag/bonus-laravel-relations/actions/workflows/test.yml/badge.svg)
  
 All licensed under the MIT license.
 
@@ -16,6 +16,9 @@ All licensed under the MIT license.
 3. Use the relations as you would any other.
 
 The relation traits can also be added individually if you prefer that.
+
+* Run tests with `composer test`
+* Run lint with `composer lint`
 
 # Relations 
 
@@ -75,3 +78,9 @@ public function latestRating()
     return $this->belongsToOne(Rating::class, 'shop_rating')->latest('created_at');
 }
 ```
+
+# InertModel
+
+As the relationships `HasMethod` and `HasAggregate` don't return a traditional model from the database, a special model called type `InertModel` is used. This allows the relationship to fill the model with arbitrary attributes without the risk of causing unexpected behavior.
+
+If you would like to use a custom InertModel rather than the one provided, create a config called `bonus-laravel-relationships.php` in your config folder, then set the value `inertModel` with the class path to the model you would like to use instead. I would recommend whatever model you use inherits from the base IntertModel to avoid unexpected behavior.
