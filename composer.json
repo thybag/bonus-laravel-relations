@@ -26,6 +26,14 @@
     "require": {
         "illuminate/database": "^8 || ^9 || ^10 | ^11"
     },
+    "scripts": {
+        "test": [
+            "vendor/bin/phpunit"
+        ],
+        "lint": [
+            "vendor/bin/phpcs"
+        ]
+    },
     "require-dev": {
         "phpunit/phpunit": "^9.5 || ^9.6",
         "orchestra/testbench": "^6",
