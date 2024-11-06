@@ -5,8 +5,8 @@ namespace thybag\BonusLaravelRelations\Relations;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use thybag\BonusLaravelRelations\Models\InertModel;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use thybag\BonusLaravelRelations\Traits\InertModelTrait;
 
 /**
  * Allows a method to be returned as if it was a relation.
@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  */
 class HasMethod extends Relation
 {
+    use InertModelTrait;
+
     protected $method;
     protected $parent;
     protected $withs = [];
@@ -31,17 +33,6 @@ class HasMethod extends Relation
         $this->parent = $parent;
         $this->method = $method;
         $this->returnCollection = $collection;
-    }
-
-    /**
-     * Get basic model instance to return as result.
-     *
-     * @return Model
-     */
-    protected function getInertModelInstance()
-    {
-        // @todo allow custom model via config
-        return new InertModel();
     }
 
     /**

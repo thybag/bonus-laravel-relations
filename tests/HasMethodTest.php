@@ -2,6 +2,7 @@
 namespace thybag\BonusLaravelRelations\Test;
 
 use Orchestra\Testbench\TestCase;
+use thybag\BonusLaravelRelations\Test\Models\CustomInert;
 use thybag\BonusLaravelRelations\Test\Models\HasMethodTestModel;
 
 class TestHasMethod extends TestCase
@@ -76,5 +77,26 @@ class TestHasMethod extends TestCase
         $test = HasMethodTestModel::make();
         $test->load('callbackAsObject');
         $this->assertEquals('one', $test->callbackAsObject->a);
+    }
+
+    public function testHasMethodWithCustomInertModel()
+    {
+        // Swap base model to be used by relationship
+        config(['bonus-laravel-relationships.inertModel' => CustomInert::class]);
+        $test = HasMethodTestModel::make([
+            'amount' => 5,
+            'value' => 2,
+            'product' => 'cake'
+        ]);
+
+        // Check we got custom class
+        $this->assertEquals(CustomInert::class, get_class($test->asMethod));
+
+        // Check custom model method exists
+        $this->assertEquals('hi', $test->asMethod->hello());
+
+        // Check data still happy
+        $this->assertEquals('Cake', $test->asMethod->product);
+        $this->assertEquals(10, $test->asMethod->totalValue);
     }
 }

@@ -17,6 +17,9 @@ All licensed under the MIT license.
 
 The relation traits can also be added individually if you prefer that.
 
+* Run tests with `composer test`
+* Run lint with `composer lint`
+
 # Relations 
 
 ### BelongsToMorph
@@ -75,3 +78,9 @@ public function latestRating()
     return $this->belongsToOne(Rating::class, 'shop_rating')->latest('created_at');
 }
 ```
+
+# InertModel
+
+As the relationships `HasMethod` and `HasAggregate` don't return a traditional model from the database, a special model called type `InertModel` is used. This allows the relationship to fill the model with arbitrary attributes without the risk of causing unexpected behavior.
+
+If you would like to use a custom InertModel rather than the one provided, create a config called `bonus-laravel-relationships.php` in your config folder, then set the value `inertModel` with the class path to the model you would like to use instead. I would recommend whatever model you use inherits from the base IntertModel to avoid unexpected behavior.
