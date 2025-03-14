@@ -4,7 +4,9 @@ namespace thybag\BonusLaravelRelations\Relations;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Expression;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Query\Grammars\Grammar;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use thybag\BonusLaravelRelations\Traits\InertModelTrait;
 
@@ -154,7 +156,13 @@ class HasAggregate extends Relation
 
         // Get select sql from builder (if set via selectRaw)
         if (!empty($this->query->getQuery()->columns)) {
-             $select = implode(', ', array_merge($this->query->getQuery()->columns));
+             $select = implode(
+                 ', ',
+                 array_map(
+                     fn ($column) => $column instanceof Expression ? $column->getValue($this->getGrammar()) : $column,
+                     $this->query->getQuery()->columns
+                 )
+             );
              $query->selectRaw($select);
         }
 
