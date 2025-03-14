@@ -9,7 +9,7 @@ use thybag\BonusLaravelRelations\Test\Models\Shop;
 use thybag\BonusLaravelRelations\Test\Models\Rating;
 use thybag\BonusLaravelRelations\Test\Models\StockLocation;
 
-class TestBelongsToOne extends TestCase
+class BelongsToOneTest extends TestCase
 {
     public function setUp(): void
     {

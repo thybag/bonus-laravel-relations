@@ -6,7 +6,7 @@ use thybag\BonusLaravelRelations\Test\Models\Shop;
 use thybag\BonusLaravelRelations\Test\Models\Product;
 use thybag\BonusLaravelRelations\Test\Models\Note;
 
-class TestBelongsToMoprh extends TestCase
+class BelongsToMorphTest extends TestCase
 {
     public function setUp(): void
     {

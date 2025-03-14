@@ -8,7 +8,7 @@ use thybag\BonusLaravelRelations\Test\Models\Region;
 use thybag\BonusLaravelRelations\Test\Models\Product;
 use thybag\BonusLaravelRelations\Test\Models\Franchise;
 
-class TestHasManyViaMany extends TestCase
+class HasManyViaManyTest extends TestCase
 {
     public function setUp(): void
     {
