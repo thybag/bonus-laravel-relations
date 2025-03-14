@@ -6,7 +6,7 @@ use thybag\BonusLaravelRelations\Test\Models\Shop;
 use thybag\BonusLaravelRelations\Test\Models\Product;
 use thybag\BonusLaravelRelations\Test\Models\CustomInert;
 
-class TestHasAggregate extends TestCase
+class HasAggregateTest extends TestCase
 {
     public function setUp(): void
     {

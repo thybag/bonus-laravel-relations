@@ -5,7 +5,7 @@ use Orchestra\Testbench\TestCase;
 use thybag\BonusLaravelRelations\Test\Models\CustomInert;
 use thybag\BonusLaravelRelations\Test\Models\HasMethodTestModel;
 
-class TestHasMethod extends TestCase
+class HasMethodTest extends TestCase
 {
     public function testHasMethodWithPublicMethod()
     {
