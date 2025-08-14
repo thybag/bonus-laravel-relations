@@ -2,6 +2,7 @@
 
 namespace thybag\BonusLaravelRelations\Relations;
 
+use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Expression;
@@ -22,21 +23,24 @@ class HasAggregate extends Relation
     protected $relation_key = null;
     // Aggregate sql - can be supplied by selectRaw instead.
     protected $aggregate_sql = '';
+    // Callback function
+    protected ?Closure $callback = null;
 
     /**
      * Set up relation
      *
-     * @param Builder
-     * @param Model
-     * @param string
-     * @param string|null
+     * @param Builder $query - Query
+     * @param Model $parent - Parent model
+     * @param string relation_key - relationship column
+     * @param string|null $sql - Raw SQL equivalent of whereRaw
+     * @param string|null $returnModel - Return model - this should be a class string
      */
-    public function __construct(Builder $query, Model $parent, string $relation_key, string $sql = null)
+    public function __construct(Builder $query, Model $parent, string $relation_key, ?string $sql = null, ?string $returnModel = null)
     {
         // The builder provided is for an instance of the real model. We want to swap this out for our
         // inert model in order to return custom attributes based on the query. To do this we grab a copy
-        // of our InertModel and give it the table from the real one.
-        $query = $this->getInertModelInstance()->setTable($query->getModel()->getTable())->newQuery();
+        // of our InertModel and give it the table from the real one. A $returnModel can be used instead.
+        $query = $this->getInertModelInstance($returnModel)->setTable($query->getModel()->getTable())->newQuery();
 
         // Set relation key
         $this->relation_key = $relation_key;
@@ -120,7 +124,7 @@ class HasAggregate extends Relation
      */
     public function getResults()
     {
-        return $this->first();
+        return $this->runModelCallback($this->first());
     }
 
     /**
@@ -129,15 +133,32 @@ class HasAggregate extends Relation
      * @param  Collection $results
      * @return array
      */
-    protected function buildDictionary(Collection $results)
+    protected function buildDictionary(Collection $results): array
     {
         $dictionary = [];
 
         foreach ($results as $result) {
-            $dictionary[$result->id] =  $result;
+            // If we have a callback, apply it to each result
+            $dictionary[$result->id] = $this->runModelCallback($result);
         }
 
         return $dictionary;
+    }
+
+    protected function runModelCallback(?Model $model): ?Model
+    {
+        // No result
+        if (empty($model)) {
+            return null;
+        }
+
+        // If we don't have a callback
+        $callback = $this->callback;
+        if (empty($callback)) {
+            return $model;
+        }
+
+        return $callback($model);
     }
 
     /**
@@ -172,5 +193,17 @@ class HasAggregate extends Relation
         }
        
         return $query;
+    }
+
+    /**
+     * Define a callback to be run against each result model
+     *
+     * @param  Closure $callback
+     * @return static
+     */
+    public function withCallback(Closure $callback): static
+    {
+        $this->callback = $callback;
+        return $this;
     }
 }

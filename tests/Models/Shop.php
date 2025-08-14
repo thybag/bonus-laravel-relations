@@ -2,6 +2,7 @@
 namespace thybag\BonusLaravelRelations\Test\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use thybag\BonusLaravelRelations\Test\Models\CustomInert;
 use thybag\BonusLaravelRelations\Traits\BonusRelationsTrait;
 
 class Shop extends Model
@@ -44,6 +45,21 @@ class Shop extends Model
     public function productTotalsViaRaw()
     {
         return $this->hasAggregate(Product::class)->selectRaw($this->productTotalsSql);
+    }
+
+    public function productTotalsWithCallback()
+    {
+        return $this->hasAggregate(Product::class)
+            ->selectRaw($this->productTotalsSql)
+            ->withCallback(function ($item) {
+                $item->uniqueText = "You have {$item->unique_products} unique products";
+                return $item;
+            });
+    }
+
+    public function productTotalsWithCustomInert()
+    {
+        return $this->hasAggregate(Product::class, 'products.shop_id', $this->productTotalsSql, CustomInert::class);
     }
 
     public function notes()

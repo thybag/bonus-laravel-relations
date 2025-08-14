@@ -38,6 +38,23 @@ class HasAggregateTest extends TestCase
         $this->assertEquals(3, $shop->productTotalsViaRaw->average_product_value);
     }
 
+    public function testHasAggregateWithCallback()
+    {
+        $shop = Shop::create(['name' => 'CheeseExpress']);
+        $shop->products()->save(Product::make(['name' => 'Cheese', 'amount' => 5, 'value' => 5]));
+        $shop->products()->save(Product::make(['name' => 'Ham', 'amount' => 5, 'value' => 2]));
+        $shop->products()->save(Product::make(['name' => 'Eggs', 'amount' => 10, 'value' => 2]));
+        $burgerexpress = Shop::create(['name' => 'BurgerExpress']);
+
+        $this->assertEquals("You have 3 unique products", $shop->productTotalsWithCallback->uniqueText);
+        $this->assertNull($burgerexpress->productTotalsWithCallback);
+
+        // Via lazy load
+        $results = Shop::where('name', 'CheeseExpress')->with('productTotalsWithCallback')->get();
+        $this->assertEquals("You have 3 unique products", $results->first()->productTotalsWithCallback->uniqueText);
+        $results = Shop::where('name', 'BurgerExpress')->with('productTotalsWithCallback')->get();
+        $this->assertNull($results->first()->productTotalsWithCallback);
+    }
 
     public function testHasAggregateWithLazyLoad()
     {
@@ -150,5 +167,23 @@ class HasAggregateTest extends TestCase
         $this->assertEquals(20, $shop->productTotals->total_products);
         $this->assertEquals(3, $shop->productTotals->unique_products);
         $this->assertEquals(3, $shop->productTotals->average_product_value);
+    }
+
+    public function testHasAggregateWithProvidedModel()
+    {
+        // Swap base model to be used by relationship
+        $shop = Shop::create(['name' => 'CheeseExpress']);
+        $shop->products()->save(Product::make(['name' => 'Cheese', 'amount' => 5, 'value' => 5]));
+        $shop->products()->save(Product::make(['name' => 'Ham', 'amount' => 5, 'value' => 2]));
+        $shop->products()->save(Product::make(['name' => 'Eggs', 'amount' => 10, 'value' => 2]));
+
+        // right class
+        $this->assertEquals(CustomInert::class, get_class($shop->productTotalsWithCustomInert));
+        // Check custom model method exists
+        $this->assertEquals('hi', $shop->productTotalsWithCustomInert->hello());
+        // Still has right data
+        $this->assertEquals(20, $shop->productTotalsWithCustomInert->total_products);
+        $this->assertEquals(3, $shop->productTotalsWithCustomInert->unique_products);
+        $this->assertEquals(3, $shop->productTotalsWithCustomInert->average_product_value);
     }
 }
