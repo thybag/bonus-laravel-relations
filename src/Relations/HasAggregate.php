@@ -23,16 +23,17 @@ class HasAggregate extends Relation
     protected $relation_key = null;
     // Aggregate sql - can be supplied by selectRaw instead.
     protected $aggregate_sql = '';
-
+    // Callback function
     protected ?Closure $callback = null;
 
     /**
      * Set up relation
      *
-     * @param Builder
-     * @param Model
-     * @param string
-     * @param string|null
+     * @param Builder $query - Query
+     * @param Model $parent - Parent model
+     * @param string relation_key - relationship column
+     * @param string|null $sql - Raw SQL equivalent of whereRaw
+     * @param string|null $returnModel - Return model - this should be a class string
      */
     public function __construct(Builder $query, Model $parent, string $relation_key, ?string $sql = null, ?string $returnModel = null)
     {

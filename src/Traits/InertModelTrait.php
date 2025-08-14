@@ -10,6 +10,7 @@ trait InertModelTrait
     /**
      * Get basic model instance to return as result.
      *
+     * @param string $useModel - Class path of model to use instead of inertModel.
      * @return Model
      */
     protected function getInertModelInstance(string $useModel = null): Model

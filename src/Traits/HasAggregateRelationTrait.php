@@ -12,10 +12,10 @@ trait HasAggregateRelationTrait
      * Return aggregated results in a relation like way.
      * Allows eager loading of aggregate results.
      *
-     * @param $related - parent model name
-     * @param $relation_key - key to group on
-     * @param $sql - aggregate sql query. Equivalent to selectRaw
-     * @param $returnModel - model to be used in place of intertModel
+     * @param string $related - parent model name
+     * @param string|null $relation_key - key to group on
+     * @param string|null $sql - aggregate sql query. Equivalent to selectRaw
+     * @param string|null $returnModel - model to be used in place of intertModel
      *
      * @return HasAggregate Relation
      */
