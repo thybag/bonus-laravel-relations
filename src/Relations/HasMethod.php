@@ -20,6 +20,8 @@ class HasMethod extends Relation
     protected $parent;
     protected $withs = [];
 
+    protected $model;
+
     // Should this result be returned as a collection? Will default to inert model.
     protected $returnCollection;
 
@@ -27,12 +29,27 @@ class HasMethod extends Relation
      * @param Model $parent
      * @param string|callback - method to run
      * @param boolean - Should result be a collection?
+     * @param string $model class path to model. Must be a laravel model.
      */
-    public function __construct(Model $parent, $method, $collection = false)
+    public function __construct(Model $parent, $method, $collection = false, ?string $model = null)
     {
         $this->parent = $parent;
         $this->method = $method;
+        $this->model = $model;
+
         $this->returnCollection = $collection;
+    }
+
+    /**
+     * Set model to be returned from relation. Replaces default inertModel.
+     *
+     * @param string $model class path to model. Must be a laravel model.
+     * @return self
+     */
+    public function withModel(string $model)
+    {
+        $this->model = $model;
+        return $this;
     }
 
     /**
@@ -116,12 +133,12 @@ class HasMethod extends Relation
             return $results->load($this->withs);
         } elseif (is_a($results, 'Illuminate\Support\Collection')) {
             // Standard collection - make it a model.
-            $result = $this->getInertModelInstance();
+            $result = $this->getInertModelInstance($this->model);
             $result->forceFill($results->toArray());
             return $result;
         } elseif (is_array($results) || is_object($results)) {
             // Object or array - model again
-            $result = $this->getInertModelInstance();
+            $result = $this->getInertModelInstance($this->model);
             $result->forceFill((array) $results);
             return $result;
         }
@@ -163,17 +180,18 @@ class HasMethod extends Relation
     /**
      * Set with/lazy load includes
      *
-     * @param  [type] $with [description]
-     * @return [type]       [description]
+     * @param  $with
+     * @return self
      */
     public function with($with)
     {
         $this->withs = $with;
+        return $this;
     }
 
     /**
      * Mock getQuery to allow include pass through.
-     * @return [type] [description]
+     * @return mock class
      */
     public function getQuery()
     {

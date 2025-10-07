@@ -57,6 +57,8 @@ public function productTotals()
 }
 ```
 
+Additional transformations on data returned from hasAggregate can be defined by using `withCallback(function($result){})` to define a transform function. Only one can be defined per relationship at present.
+
 ### HasMethod
 Use a local method as if it were a relation.
 
@@ -83,4 +85,4 @@ public function latestRating()
 
 As the relationships `HasMethod` and `HasAggregate` don't return a traditional model from the database, a special model called type `InertModel` is used. This allows the relationship to fill the model with arbitrary attributes without the risk of causing unexpected behavior.
 
-If you would like to use a custom InertModel rather than the one provided, create a config called `bonus-laravel-relationships.php` in your config folder, then set the value `inertModel` with the class path to the model you would like to use instead. I would recommend whatever model you use inherits from the base IntertModel to avoid unexpected behavior.
+If you would like to use a custom InertModel rather than the one provided, create a config called `bonus-laravel-relationships.php` in your config folder, then set the value `inertModel` with the class path to the model you would like to use instead. I would recommend whatever model you use inherits from the base IntertModel to avoid unexpected behavior. Alternatively the `hasMethod` relationship supports a `withModel` or passing a `model` parameter to override this. Similar functionality is available in `hasAggrgegate` using the `returnModel` parameter.

@@ -2,6 +2,7 @@
 namespace thybag\BonusLaravelRelations\Test\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use thybag\BonusLaravelRelations\Test\Models\CustomInert;
 use thybag\BonusLaravelRelations\Traits\BonusRelationsTrait;
 
 class HasMethodTestModel extends Model
@@ -89,5 +90,25 @@ class HasMethodTestModel extends Model
             $test->b = 'two';
             return $test;
         });
+    }
+
+    public function asCallbackWithCustomModel()
+    {
+        return $this->hasMethod(
+            function () {
+                return ['boop' => 'beep'];
+            },
+            model: CustomInert::class
+        );
+    }
+
+    public function asCallbackWithCustomModelSett()
+    {
+        return $this->hasMethod(
+            function () {
+                return ['boop' => 'beep'];
+            }
+        )
+        ->withModel(CustomInert::class);
     }
 }
