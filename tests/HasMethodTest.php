@@ -99,4 +99,14 @@ class HasMethodTest extends TestCase
         $this->assertEquals('Cake', $test->asMethod->product);
         $this->assertEquals(10, $test->asMethod->totalValue);
     }
+
+    public function testHasMethodWithCustomModels()
+    {
+        $test = HasMethodTestModel::make();
+        $this->assertEquals('beep', $test->asCallbackWithCustomModel->boop);
+        $this->assertEquals('hi', $test->asCallbackWithCustomModel->hello());
+
+        $this->assertEquals('beep', $test->asCallbackWithCustomModelSett->boop);
+        $this->assertEquals('hi', $test->asCallbackWithCustomModelSett->hello());
+    }
 }
